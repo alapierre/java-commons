@@ -1,5 +1,6 @@
-package pl.sid.commons.io;
+package io.alapierre.io;
 
+import io.alapierre.io.MultipleReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXParseException;
