@@ -1,0 +1,16 @@
+{
+  "state" : 2,
+  "confirm" : 1,
+  "list" : "7lpa83ez6d",
+  "subscribers" : [ {
+    "email" : "al@soft-project.pl",
+    "custom_fields" : {
+      "imie" : "Adrian Lapierre"
+    }
+  }, {
+    "email" : "adrian.lapierre@sidgroup.pl",
+    "custom_fields" : {
+      "imie" : "Jan Kowalski"
+    }
+  } ]
+}
