@@ -374,10 +374,10 @@ public class PgpServiceImpl {
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
-    public Stream<String> signatures(PGPPublicKey pk) {
-        Iterable<String> iterable = pk::getKeySignatures;
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
+//    public Stream<String> signatures(PGPPublicKey pk) {
+//        Iterable<String> iterable = pk::getKeySignatures;
+//        return StreamSupport.stream(iterable.spliterator(), false);
+//    }
 
 
 

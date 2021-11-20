@@ -359,10 +359,10 @@ public class PGPKeyUtil {
         return String.join( " ", hexFingerPrint.toUpperCase().split("(?<=\\G.{4})"));
     }
 
-    public static Stream<String> signatures(PGPPublicKey pk) {
-        Iterable<String> iterable = pk::getKeySignatures;
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
+//    public static Stream<String> signatures(PGPPublicKey pk) {
+//        Iterable<String> iterable = pk::getKeySignatures;
+//        return StreamSupport.stream(iterable.spliterator(), false);
+//    }
 
     public static Stream<String> keyidsAsStream(PGPPublicKey key) {
         Iterable<String> iterable = key::getUserIDs;

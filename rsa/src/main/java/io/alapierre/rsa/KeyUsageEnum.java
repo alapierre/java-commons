@@ -1,4 +1,4 @@
-package pl.sid.commons;
+package io.alapierre.rsa;
 
 import org.bouncycastle.asn1.x509.KeyUsage;
 

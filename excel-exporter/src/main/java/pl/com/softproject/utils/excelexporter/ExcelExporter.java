@@ -4,7 +4,6 @@
 
 package pl.com.softproject.utils.excelexporter;
 
-import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -67,9 +66,9 @@ public class ExcelExporter {
 
     private Map<ColumnStyleDescriptor, CellStyle> styles = new HashMap<>();
 
-    public ExcelExporter(String sheetName) {        
-        this.sheetName = sheetName;        
-        init();        
+    public ExcelExporter(String sheetName) {
+        this.sheetName = sheetName;
+        init();
     }
 
     /**
@@ -89,14 +88,14 @@ public class ExcelExporter {
         additionalColumns.add(columnDescriptor);
         return this;
     }
-    
+
     /**
      * Usuwa zdefiniowane kolumny dla arkusza
      */
     public void clearColumns() {
         columns.clear();
     }
-    
+
     /**
      * Dodaje wiersz do akrusza pobierając refleksją dane z dostarczonego beana
      *
@@ -152,7 +151,7 @@ public class ExcelExporter {
     }
 
 //    public void createOtherRow(Object bean, int colNumber, List<ColumnDescriptor> columns) {
-//        
+//
 //        currentColumnNumber = colNumber;
 //        HSSFRow row = sheet.createRow(currentRowNumber);
 //        for(ColumnDescriptor column : columns) {
@@ -163,10 +162,10 @@ public class ExcelExporter {
 //    }
 
     public int getColumnIndex(String headerName) {
-        
+
         int result = 0;
         boolean finded = false;
-        
+
         for(ColumnDescriptor column : columns) {
             if(headerName.equals(column.getHeaderName())) {
                 finded=true;
@@ -174,10 +173,10 @@ public class ExcelExporter {
             }
             result++;
         }
-        
+
         return finded ? result : -1;
     }
-    
+
     /**
      * Zapisuje utworzony arkusz do pliku
      *
@@ -220,7 +219,7 @@ public class ExcelExporter {
         initHeaderStyle();
     }
 
-    protected void initDefaultCellStyles() {        
+    protected void initDefaultCellStyles() {
         styleMoney = createCellStyle(new ColumnStyleDescriptor("#,##0.00", ColumnStyleType.DEFAULT));
         styleDate = createCellStyle(new ColumnStyleDescriptor("yyyy-mm-dd hh:mm", ColumnStyleType.DEFAULT));
         styleDateNoTime = createCellStyle(new ColumnStyleDescriptor("yyyy-mm-dd", ColumnStyleType.DEFAULT));
@@ -296,18 +295,18 @@ public class ExcelExporter {
         wb = new HSSFWorkbook();
         sheet = wb.createSheet(sheetName);
     }
-    
+
     public void addSheet(String name) {
         sheetName = name;
         sheet = wb.createSheet(name);
         currentColumnNumber = 0;
         currentRowNumber = 0;
     }
-    
+
     public Workbook getWorkbook() {
         return wb;
     }
-    
+
     protected void createHeaderRow() {
         header = sheet.createRow(currentRowNumber);
         for(ColumnDescriptor column : columns) {
@@ -443,19 +442,11 @@ public class ExcelExporter {
     protected Object getProperty(Object bean, ColumnDescriptor columnDescriptor) {
         try {
             return PropertyUtils.getNestedProperty(bean, columnDescriptor.getPropertyName());
-        } catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             throw new PropertyAccessException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new PropertyAccessException(ex);
-        } catch (NoSuchMethodException ex) {
-            throw new PropertyAccessException(ex);
-        } catch (NestedNullException ignore) {
+        } catch (IndexOutOfBoundsException ex) {
             if(log.isDebugEnabled())
-                log.debug(ignore.getMessage());
-            return null;
-        } catch (IndexOutOfBoundsException ignore) {
-            if(log.isDebugEnabled())
-                log.debug("for property " + columnDescriptor.getPropertyName() + " " + ignore.getMessage());
+                log.debug("for property " + columnDescriptor.getPropertyName() + " " + ex.getMessage());
             return null;
         }
     }
@@ -473,7 +464,7 @@ public class ExcelExporter {
             sb.append(prop);
 
         for(ColumnDescriptor cd : columnDescriptor.getColumnDescriptors()) {
-            
+
             if(getProperty(bean, cd) != null) {
                 sb.append(' ');
                 sb.append(getProperty(bean, cd));

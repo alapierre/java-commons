@@ -1,5 +1,6 @@
-package pl.sid.commons;
+package io.alapierre.rsa;
 
+import io.alapierre.rsa.RsaUtil;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.Extensions;
