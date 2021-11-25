@@ -25,11 +25,12 @@ import java.util.*;
  * $Rev: $, $LastChangedBy: $
  * $LastChangedDate: $
  */
+@SuppressWarnings("unused")
 @Slf4j
 public class ExcelExporter {
 
-    protected List<ColumnDescriptor> columns = new LinkedList<ColumnDescriptor>();
-    protected List<ColumnDescriptor> additionalColumns = new LinkedList<ColumnDescriptor>();
+    protected List<ColumnDescriptor> columns = new LinkedList<>();
+    protected List<ColumnDescriptor> additionalColumns = new LinkedList<>();
     protected OutputStream out;
     protected String sheetName;
     protected HSSFSheet sheet;
@@ -45,7 +46,7 @@ public class ExcelExporter {
     protected CellStyle styleDefault;
     protected CellStyle styleDateNoTime;
 
-    private Map<ColumnStyleDescriptor, CellStyle> styles = new HashMap<>();
+    private final Map<ColumnStyleDescriptor, CellStyle> styles = new HashMap<>();
 
     public ExcelExporter(String sheetName) {
         this.sheetName = sheetName;
@@ -54,11 +55,11 @@ public class ExcelExporter {
 
     /**
      * Tworzy kolumnę w wynikowym arkuszu. Do arkusza trafią wyłącznie
-     * te właściwości serializowanego obiektu, które wcześniej zostaną dodane
+     * te właściwości obiektu, które wcześniej zostaną dodane
      * przy pomocy tej metody
      *
-     * @param columnDescriptor
-     * @return
+     * @param columnDescriptor parametry kolumny do dodania
+     * @return this
      */
     public ExcelExporter addColumn(ColumnDescriptor columnDescriptor) {
         columns.add(columnDescriptor);
@@ -78,9 +79,9 @@ public class ExcelExporter {
     }
 
     /**
-     * Dodaje wiersz do akrusza pobierając refleksją dane z dostarczonego beana
+     * Dodaje wiersz do arkusza pobierając refleksją dane z dostarczonego beana
      *
-     * @param bean
+     * @param bean JavaBean z danymi do wstawienia w wierszu
      */
     public void createRow(Object bean) {
 
@@ -96,21 +97,7 @@ public class ExcelExporter {
     }
 
     public void createRow(Object bean, List<Object> additionalBeans) {
-
-        if(currentRowNumber == 0) {
-            createHeaderRowWithAdditional();
-        }
-
-        HSSFRow row = sheet.createRow(currentRowNumber);
-        for(ColumnDescriptor column : columns) {
-            createCell(row, bean, column);
-        }
-        for(ColumnDescriptor column : additionalColumns) {
-            if(additionalBeans != null && !(additionalColumns.indexOf(column) >= additionalBeans.size()))
-                createCell(row, additionalBeans.get(additionalColumns.indexOf(column)), column);
-        }
-        currentColumnNumber = 0;
-        currentRowNumber++;
+        createRow(bean, additionalBeans, this.additionalColumns);
     }
 
     public void createRow(Object bean, List<Object> additionalBeans, List<ColumnDescriptor> additionalColumns) {
@@ -131,17 +118,6 @@ public class ExcelExporter {
         currentRowNumber++;
     }
 
-//    public void createOtherRow(Object bean, int colNumber, List<ColumnDescriptor> columns) {
-//
-//        currentColumnNumber = colNumber;
-//        HSSFRow row = sheet.createRow(currentRowNumber);
-//        for(ColumnDescriptor column : columns) {
-//            createCell(row, bean, column);
-//        }
-//        currentColumnNumber = 0;
-//        currentRowNumber++;
-//    }
-
     public int getColumnIndex(String headerName) {
 
         int result = 0;
@@ -161,9 +137,9 @@ public class ExcelExporter {
     /**
      * Zapisuje utworzony arkusz do pliku
      *
-     * @param outputFile
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param outputFile plik, do jakiego należy zapisać dane
+     * @throws FileNotFoundException — jeśli ścieżka do pliku nie istnieje
+     * @throws IOException inne błędy IO
      */
     public void save(File outputFile) throws FileNotFoundException, IOException {
         OutputStream os = new FileOutputStream(outputFile);
@@ -174,11 +150,11 @@ public class ExcelExporter {
     /**
      * Zapisuje utworzony arkusz do OutputStream
      *
-     * @param os need to by closed
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param os need to closed
+     * @throws FileNotFoundException ścieżka do pliku nie istnieje
+     * @throws IOException inne błędy IO
      */
-    public void save(OutputStream os) throws FileNotFoundException, IOException {
+    public void save(OutputStream os) throws IOException {
         wb.write(os);
     }
 
@@ -209,9 +185,9 @@ public class ExcelExporter {
 
     protected void initHeaderStyle() {
         Font font = wb.createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setBold(true);
         styleHeader = wb.createCellStyle();
-        styleHeader.setAlignment(CellStyle.ALIGN_CENTER);
+        styleHeader.setAlignment(HorizontalAlignment.CENTER);
         styleHeader.setFont(font);
     }
 
@@ -229,20 +205,20 @@ public class ExcelExporter {
             cellStyle.setDataFormat(format.getFormat(columnStyleDescriptor.getExcelFormatMask()));
         if(columnStyleDescriptor.getType() != null) {
             if (columnStyleDescriptor.getType().equals(ColumnStyleType.ERROR)) {
-                cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-                cellStyle.setFillForegroundColor(HSSFColor.RED.index);
+                cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
             }
             if (columnStyleDescriptor.getType().equals(ColumnStyleType.SUCCESS)) {
-                cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-                cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+                cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
             }
             if (columnStyleDescriptor.getType().equals(ColumnStyleType.WARNING)) {
-                cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-                cellStyle.setFillForegroundColor(HSSFColor.YELLOW.index);
+                cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
             }
             if (columnStyleDescriptor.getType().equals(ColumnStyleType.BLUE)) {
-                cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-                cellStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+                cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_BLUE.getIndex());
             }
         }
 
@@ -250,7 +226,7 @@ public class ExcelExporter {
         return cellStyle;
     }
 
-    protected CellStyle cellStyleFromColumnlDescriptor(ColumnStyleDescriptor columnStyleDescriptor) {
+    protected CellStyle cellStyleFromColumnDescriptor(ColumnStyleDescriptor columnStyleDescriptor) {
         return createCellStyle(columnStyleDescriptor);
     }
 
@@ -258,7 +234,7 @@ public class ExcelExporter {
      * Zwraca domyślny styl lub styl zdefiniowany w ColumnDescriptor
      *
      * @param defaultCellStyle - domyślny styl dla tej kolumny
-     * @return
+     * @return CellStyle domyślny lub utworzony z ColumnDescriptor
      */
     protected CellStyle determinateCellStyle(ColumnStyleDescriptor columnStyleDescriptor, CellStyle defaultCellStyle) {
 
@@ -266,7 +242,7 @@ public class ExcelExporter {
             return defaultCellStyle;
 
         if (columnStyleDescriptor.getExcelFormatMask() != null || columnStyleDescriptor.getType() != null) {
-            return cellStyleFromColumnlDescriptor(columnStyleDescriptor);
+            return cellStyleFromColumnDescriptor(columnStyleDescriptor);
         }
 
         return defaultCellStyle;
@@ -289,47 +265,30 @@ public class ExcelExporter {
     }
 
     protected void createHeaderRow() {
-        header = sheet.createRow(currentRowNumber);
-        for(ColumnDescriptor column : columns) {
-            Cell cell = header.createCell(currentColumnNumber++);
-            cell.setCellValue(column.getHeaderName());
-            cell.setCellStyle(styleHeader);
-            if(column.getColumns() != null && column.getColumns() > 1){
-                sheet.addMergedRegion(new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(), cell.getColumnIndex() + column.getColumns() - 1));
-            }
-        }
+        createRowAndCells();
         currentColumnNumber = 0;
         currentRowNumber++;
     }
 
     protected void createHeaderRowWithAdditional() {
-        header = sheet.createRow(currentRowNumber);
-
-        for(ColumnDescriptor column : columns) {
-            Cell cell = header.createCell(currentColumnNumber++);
-            cell.setCellValue(column.getHeaderName());
-            cell.setCellStyle(styleHeader);
-            if(column.getColumns() != null && column.getColumns() > 1){
-                sheet.addMergedRegion(new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(), cell.getColumnIndex() + column.getColumns() - 1));
-            }
-        }
-
-        for(ColumnDescriptor column : additionalColumns) {
-            Cell cell = header.createCell(currentColumnNumber++);
-            cell.setCellValue(column.getHeaderName());
-            cell.setCellStyle(styleHeader);
-            if(column.getColumns() != null && column.getColumns() > 1){
-                sheet.addMergedRegion(new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(), cell.getColumnIndex() + column.getColumns() - 1));
-            }
-        }
-
-        currentColumnNumber = 0;
-        currentRowNumber++;
+        createHeaderRowWithAdditional(additionalColumns);
     }
 
     protected void createHeaderRowWithAdditional(List<ColumnDescriptor> additionalColumns) {
-        header = sheet.createRow(currentRowNumber);
 
+        createRowAndCells();
+        createCells(additionalColumns);
+
+        currentColumnNumber = 0;
+        currentRowNumber++;
+    }
+
+    private void createRowAndCells() {
+        header = sheet.createRow(currentRowNumber);
+        createCells(columns);
+    }
+
+    private void createCells(List<ColumnDescriptor> columns) {
         for(ColumnDescriptor column : columns) {
             Cell cell = header.createCell(currentColumnNumber++);
             cell.setCellValue(column.getHeaderName());
@@ -338,20 +297,7 @@ public class ExcelExporter {
                 sheet.addMergedRegion(new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(), cell.getColumnIndex() + column.getColumns() - 1));
             }
         }
-
-        for(ColumnDescriptor column : additionalColumns) {
-            Cell cell = header.createCell(currentColumnNumber++);
-            cell.setCellValue(column.getHeaderName());
-            cell.setCellStyle(styleHeader);
-            if(column.getColumns() != null && column.getColumns() > 1){
-                sheet.addMergedRegion(new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(), cell.getColumnIndex() + column.getColumns() - 1));
-            }
-        }
-
-        currentColumnNumber = 0;
-        currentRowNumber++;
     }
-
 
     protected void createCell(HSSFRow row, Object bean, ColumnDescriptor columnDescriptor) {
 
@@ -375,7 +321,7 @@ public class ExcelExporter {
             return;
         }
 
-        HSSFCell cell = null;
+        HSSFCell cell;
         if(columnDescriptor.getColumnValueFormatter() != null) {
             cell = row.createCell(currentColumnNumber++);
             cell.setCellValue(columnDescriptor.getColumnValueFormatter().format(property));
@@ -388,13 +334,13 @@ public class ExcelExporter {
         else if(property instanceof LocalDate) {
             cell = row.createCell(currentColumnNumber++);
             LocalDate localData = (LocalDate) property;
-            cell.setCellValue(localData != null ? Date.from(localData.atStartOfDay(ZoneId.systemDefault()).toInstant()) : null);
+            cell.setCellValue(Date.from(localData.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             cell.setCellStyle(determinateCellStyle(columnDescriptor.getStyleDescriptor(), styleDateNoTime));
         }
         else if(property instanceof LocalDateTime) {
             cell = row.createCell(currentColumnNumber++);
             LocalDateTime localDataTime = (LocalDateTime) property;
-            cell.setCellValue(localDataTime != null ? Date.from(localDataTime.atZone(ZoneId.systemDefault()).toInstant()) : null);
+            cell.setCellValue(Date.from(localDataTime.atZone(ZoneId.systemDefault()).toInstant()));
             cell.setCellStyle(determinateCellStyle(columnDescriptor.getStyleDescriptor(), styleDate));
         }
         else if(property instanceof String) {
@@ -463,7 +409,7 @@ public class ExcelExporter {
 
         HSSFCellStyle my_style = wb.createCellStyle();
         HSSFFont my_font = wb.createFont();
-        my_font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        my_font.setBold(true);
         my_font.setColor(HSSFFont.COLOR_RED);
         my_style.setFont(my_font);
         sheet.getRow(row).getCell(cell).setCellStyle(my_style);
@@ -471,7 +417,7 @@ public class ExcelExporter {
 
     public void setCellStyleColor(int row, int cell, int r, int g, int b) {
         HSSFCellStyle cellStyle = wb.createCellStyle();
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         HSSFPalette palette = wb.getCustomPalette();
         HSSFColor color = palette.findSimilarColor(r, g, b);
         cellStyle.setFillForegroundColor(color.getIndex());
@@ -484,7 +430,7 @@ public class ExcelExporter {
 
     public HSSFCellStyle createCellStyleColor(int r, int g, int b){
         HSSFCellStyle cellStyle = wb.createCellStyle();
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         HSSFPalette palette = wb.getCustomPalette();
         HSSFColor color = palette.findSimilarColor(r, g, b);
         cellStyle.setFillForegroundColor(color.getIndex());
