@@ -1,10 +1,10 @@
 package pl.com.softproject.utils.excelexporter;
 
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * Class ColumnStyleDescriptor

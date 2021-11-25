@@ -1,11 +1,12 @@
 package pl.com.softproject.utils.xml;
 
+import org.xml.sax.SAXParseException;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.xml.sax.SAXParseException;
 
 /**
  * Command Line XML Validator
@@ -14,14 +15,14 @@ import org.xml.sax.SAXParseException;
 public class CommandLineValidator {
 
     public static void main(String[] args) throws Exception {
-        
+
         if(args.length != 1) {
             System.out.println("Bad number of parameters, expected one file name!");
             System.exit(1);
         }
-        
+
         String fileName = args[0];
-        
+
         System.out.println("\nCommand Line XML Validator");
         System.out.println("--------------------------");
 
@@ -41,9 +42,9 @@ public class CommandLineValidator {
         } else {
             System.out.println("syntax OK");
         }
-        
+
         System.out.println("\nStart validation\n");
-        
+
         reader = new FileReader(new File(fileName));
         valid = XMLValidator.validate(reader, errors);
 

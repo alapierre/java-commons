@@ -3,20 +3,16 @@
  */
 package pl.com.softproject.utils.pivot;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
+import pl.com.softproject.utils.excelexporter.ExcelCellRenderer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellReference;
-import pl.com.softproject.utils.excelexporter.ExcelCellRenderer;
 
 /**
  *
@@ -34,7 +30,7 @@ public class PivotTableExcelExporter {
     public PivotTableExcelExporter(Workbook wb) {
         this.wb = wb;
     }
-    
+
     private void createWorkbook() {
         wb = new HSSFWorkbook();
     }
@@ -71,22 +67,22 @@ public class PivotTableExcelExporter {
             cell.setCellValue(rowKey);
             short cellnum = 1;
             for (String column : columns) {
-                cell = row.createCell(cellnum++);                
+                cell = row.createCell(cellnum++);
                 Object cellValue = pivotRow.get(column);
-                
+
                 if(renderer != null)
                     renderer.render(cell, cellValue);
-                
+
                 if (cellValue instanceof Number) {
-                    
+
                     Number number = (Number) cellValue;
-                    cell.setCellValue(number.doubleValue());                    
-                } else if (cellValue instanceof String) {                    
-                    
+                    cell.setCellValue(number.doubleValue());
+                } else if (cellValue instanceof String) {
+
                     String result = (String) cellValue;
-                    cell.setCellValue(result);                    
+                    cell.setCellValue(result);
                 } else {
-                    
+
                     if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
                         cell.setCellValue(0);
                     } else {
@@ -100,7 +96,7 @@ public class PivotTableExcelExporter {
 
         }
 
-        autoSizeColumn(sheet, 0);        
+        autoSizeColumn(sheet, 0);
     }
 
     public void autoSizeColumn(Sheet sheet, int colIndex) {
@@ -113,11 +109,11 @@ public class PivotTableExcelExporter {
     }
 
     public void saveWorkbook(File file) throws FileNotFoundException, IOException {
-        
+
         if (wb == null) {
             createWorkbook();
         }
-        
+
         FileOutputStream out = new FileOutputStream(file);
         wb.write(out);
         out.close();
@@ -138,21 +134,21 @@ public class PivotTableExcelExporter {
             cell.setCellValue("suma");
             cell.setCellStyle(cs);
         }
-        
+
         return row;
     }
 
     public void setAddSumarryColumn(boolean addSumarryColumn) {
         this.addSumarryColumn = addSumarryColumn;
     }
-    
-    
+
+
 
     private void addSumarryColumn(int cellnum, int rownum, Row row) {
         Cell cell = row.createCell(cellnum);
         CellReference cellReference = new org.apache.poi.hssf.util.CellReference(rownum-1, cellnum-1, false, false);
         CellReference startCellReference = new org.apache.poi.hssf.util.CellReference(rownum-1, 1, false, false);
-        
+
         cellReference.formatAsString();
         String formula = "sum(" + startCellReference.formatAsString() + ":" + cellReference.formatAsString() + ")";
         cell.setCellFormula(formula);

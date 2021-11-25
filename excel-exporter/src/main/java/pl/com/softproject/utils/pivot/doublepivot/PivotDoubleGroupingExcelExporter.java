@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-
 import pl.com.softproject.utils.excelexporter.ExcelCellRenderer;
 
 import java.io.File;

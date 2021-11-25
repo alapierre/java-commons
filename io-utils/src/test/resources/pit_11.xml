@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Deklaracja xmlns="http://crd.gov.pl/wzor/2014/12/08/1887/" xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2011/06/21/eD/DefinicjeTypy/" xmlns:zr="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2014/12/01/eD/PITR/" xmlns:zzu="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2011/10/07/eD/ORDZU/">
+<Deklaracja xmlns="http://crd.gov.pl/wzor/2014/12/08/1887/"
+            xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2011/06/21/eD/DefinicjeTypy/"
+>
  <Naglowek>
   <KodFormularza kodPodatku="PIT" kodSystemowy="PIT-11 (21)" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PIT-11</KodFormularza>
   <WariantFormularza>21</WariantFormularza>

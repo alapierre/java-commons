@@ -1,18 +1,12 @@
 package io.alapierre.io;
 
-import io.alapierre.io.MultipleReader;
 import org.junit.Assert;
 import org.junit.Test;
-import org.xml.sax.SAXParseException;
-import pl.com.softproject.utils.xml.XMLValidator;
 
-import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
@@ -75,18 +69,6 @@ public class MultipleReaderTest {
 
     private String loadTemplate(String filePath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filePath)));
-    }
-
-    @Test
-    public void readAndValid() throws Exception{
-
-        MultipleReader reader = new MultipleReader(new FileReader("src/test/resources/pit_11.xml"));
-
-        String namespace = XMLValidator.getNemespaceFromXMLDocument(reader.getReader());
-        System.out.println("namespase from XML: " + namespace);
-        List<SAXParseException> errors = new ArrayList<>();
-        XMLValidator.validate(reader.getReader(), new StreamSource(namespace + "schemat.xsd"), errors);
-
     }
 
 }
