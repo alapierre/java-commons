@@ -6,7 +6,29 @@
 
     <scm>
         <developerConnection>scm:git:git@github.com:alapierre/java-commons.git</developerConnection>
+        <url>https://github.com/alapierre/java-commons</url>
+        <tag>HEAD</tag>
     </scm>
+
+    <url>https://github.com/alapierre/java-commons</url>
+
+    <description>
+        Common Java utilities
+    </description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <email>al@alapierre.io</email>
+            <name>Adrian Lapierre</name>
+        </developer>
+    </developers>
 
     <packaging>pom</packaging>
     <modules>
