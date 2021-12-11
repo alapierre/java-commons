@@ -1,10 +1,7 @@
 package pl.com.softproject.utils.pivot.doublepivot;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import pl.com.softproject.utils.excelexporter.ExcelCellRenderer;
 
@@ -39,11 +36,11 @@ public class PivotDoubleGroupingExcelExporter implements Serializable {
         }
 
         Font font = workbook.createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setBold(true);
         CellStyle cs = workbook.createCellStyle();
         cs.setFont(font);
-        cs.setAlignment(CellStyle.ALIGN_CENTER);
-        cs.setVerticalAlignment(CellStyle.VERTICAL_TOP);
+        cs.setAlignment(HorizontalAlignment.CENTER);
+        cs.setVerticalAlignment(VerticalAlignment.TOP);
 
         Sheet sheet = workbook.createSheet(sheetName);
 

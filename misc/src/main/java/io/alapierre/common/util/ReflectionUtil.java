@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @SuppressWarnings("unused")
 public final class ReflectionUtil {
 
-    public static Object getValue(@NotNull Class<?> type, String value) {
+    public static <T> T getValue(@NotNull Class<T> type, String value) {
 
         Object response = null;
         if (type.isEnum()) {
@@ -31,7 +31,7 @@ public final class ReflectionUtil {
         else if(type.equals(Integer.class) || type.equals(int.class)){
             response = fromInteger(value);
         }
-        return response;
+        return (T) response;
     }
 
     private static Object fromEnum(@NotNull Class<? extends Enum> type, String value) {

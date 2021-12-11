@@ -20,7 +20,7 @@ public class SystemUtils {
         return OS_NAME.startsWith("Windows");
     }
 
-    private static Optional<String> getSystemProperty(final String property) {
+    public static Optional<String> getSystemProperty(final String property) {
         try {
             return Optional.ofNullable(System.getProperty(property));
         } catch (final SecurityException ex) {

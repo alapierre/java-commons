@@ -1,4 +1,4 @@
-package io.alapierre.common.util;
+package io.alapierre.func;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

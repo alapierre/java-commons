@@ -22,8 +22,6 @@ import java.util.*;
  * Serializuje obiekty do pliku .xls
  *
  * @author <a href="mailto:alapierre@soft-project.pl">Adrian Lapierre</a>
- * $Rev: $, $LastChangedBy: $
- * $LastChangedDate: $
  */
 @SuppressWarnings("unused")
 @Slf4j

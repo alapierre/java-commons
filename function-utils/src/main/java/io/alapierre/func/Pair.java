@@ -11,15 +11,14 @@ import java.io.Serializable;
  */
 public class Pair<K, V> implements Serializable {
 
-    private K key;
+    private final K key;
 
-    private V value;
+    private final V value;
 
     public Pair(@NotNull K key, @NotNull V value) {
         this.key = key;
         this.value = value;
     }
-
 
     @NotNull K getKey() {
         return key;

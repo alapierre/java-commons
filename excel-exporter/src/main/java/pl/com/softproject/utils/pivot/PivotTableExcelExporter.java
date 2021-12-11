@@ -42,11 +42,10 @@ public class PivotTableExcelExporter {
         }
 
         Font font = wb.createFont();
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setBold(true);
         CellStyle cs = wb.createCellStyle();
         cs.setFont(font);
-        cs.setAlignment(CellStyle.ALIGN_CENTER);
-
+        cs.setAlignment(HorizontalAlignment.CENTER);
         Sheet sheet = wb.createSheet(sheetName);
 
         Row row ;
@@ -83,7 +82,7 @@ public class PivotTableExcelExporter {
                     cell.setCellValue(result);
                 } else {
 
-                    if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                    if (cell.getCellType() == CellType.NUMERIC) {
                         cell.setCellValue(0);
                     } else {
                         cell.setCellValue("");
@@ -146,8 +145,8 @@ public class PivotTableExcelExporter {
 
     private void addSumarryColumn(int cellnum, int rownum, Row row) {
         Cell cell = row.createCell(cellnum);
-        CellReference cellReference = new org.apache.poi.hssf.util.CellReference(rownum-1, cellnum-1, false, false);
-        CellReference startCellReference = new org.apache.poi.hssf.util.CellReference(rownum-1, 1, false, false);
+        CellReference cellReference = new CellReference(rownum-1, cellnum-1, false, false);
+        CellReference startCellReference = new CellReference(rownum-1, 1, false, false);
 
         cellReference.formatAsString();
         String formula = "sum(" + startCellReference.formatAsString() + ":" + cellReference.formatAsString() + ")";
