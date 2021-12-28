@@ -54,6 +54,7 @@
         <annotations.version>23.0.0</annotations.version>
         <lombok.version>1.18.22</lombok.version>
         <jaxb.version>2.3.2</jaxb.version>
+        <junit5.version>5.8.2</junit5.version>
     </properties>
 
     <build>
