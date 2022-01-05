@@ -149,9 +149,7 @@ public class BaseXMLSerializer<T> {
 
     public void toFile(T document, String fileName, boolean validate) {
 
-        OutputStream out = null;
-
-        try {
+        try (OutputStream out = new FileOutputStream(fileName)) {
             Marshaller marshaller = jc.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
@@ -160,15 +158,13 @@ public class BaseXMLSerializer<T> {
 
             if(validate)
                 marshaller.setSchema(schema);
-            out = new FileOutputStream(fileName);
+
             marshaller.marshal(document, out);
 
         } catch (JAXBException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         } catch (IOException ex) {
             throw new XMLParseException(ex.getMessage(), ex);
-        } finally {
-            quietlyClose(out);
         }
     }
 
@@ -178,9 +174,7 @@ public class BaseXMLSerializer<T> {
 
     public void toFile(T document, String fileName, String encoding, boolean validate) {
 
-        OutputStream out = null;
-
-        try {
+        try (OutputStream out = new FileOutputStream(fileName)) {
             Marshaller marshaller = jc.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
@@ -190,15 +184,13 @@ public class BaseXMLSerializer<T> {
 
             if(validate)
                 marshaller.setSchema(schema);
-            out = new FileOutputStream(fileName);
+
             marshaller.marshal(document, out);
 
         } catch (JAXBException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         } catch (IOException ex) {
             throw new XMLParseException(ex.getMessage(), ex);
-        } finally {
-            quietlyClose(out);
         }
     }
 

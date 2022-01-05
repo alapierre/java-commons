@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author Adrian Lapierre {@literal <adrian@soft-project.pl>}
  */
-public class Pair<K, V> implements Serializable {
+public class Pair<K, V> {
 
     private final K key;
 

@@ -3,6 +3,7 @@
  */
 package pl.com.softproject.utils.pivot;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,23 +13,23 @@ import java.util.Set;
  *
  * @author Adrian Lapierre <adrian@softproject.com.pl>
  */
-public interface PivotTableModel {
+public interface PivotTableModel extends Serializable {
 
     void add(String rowKey, String columnKey, Object value);
 
     void addRow(String rowKey, Map<String, Object> rowValue);
-    
+
     void addColumn(String columnKey, Object value) throws Exception;
-    
+
     void addColumn(String columnKey, Map<String, Object> rowKeyToColumnValueMap);
-      
+
     void removeRow(String rowKey);
-    
+
     void removeColumn(String columnKey);
-    
+
     Iterator iterator();
-    
-//    String[] getColumnNames();    
+
+//    String[] getColumnNames();
 //    int getRowCount();
 //    int getColumnCount();
 //    Class getColumnClass(int columnIndex);
@@ -40,5 +41,5 @@ public interface PivotTableModel {
     Set<String> getColumnNames();
 
     Object get(String rowKey, String columnKey);
-    
+
 }

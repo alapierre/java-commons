@@ -30,11 +30,12 @@ public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescrip
      */
     public abstract String formatValue(int rowNumber, Object value);
 
-    public CollectionColumnDescriptor(String headerName, String propertyName) {
+    protected CollectionColumnDescriptor(String headerName, String propertyName) {
         super(headerName);
         this.propertyName = propertyName;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public String getValue(int rowNumber, Object bean) {
 
@@ -53,13 +54,6 @@ public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescrip
                 if(iterator.hasNext())
                     sb.append(", ");
             }
-
-//            for(Object tmp : (Collection)obj) {
-//                sb.append(formatValue(rowNumber, tmp));
-//
-//                sb.append(", ");
-//
-//            }
         } else {
             log.warn("property " + propertyName + " is not instance of Collection - " + obj.getClass());
             return null;
@@ -72,7 +66,6 @@ public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescrip
                 log.debug("for property " + propertyName + " " + ex.getMessage());
             return null;
         }
-        //return sb.substring(0, sb.length()-1);
         return sb.toString();
     }
 

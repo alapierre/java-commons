@@ -42,14 +42,10 @@ public class MultipleReader {
     }
 
     public static MultipleReader fromOutputStream(IOConsumer<OutputStream> function) throws IOException {
-        ByteArrayOutputStream outputStream = null;
-        try {
-            outputStream = new ByteArrayOutputStream();
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             function.accept(outputStream);
-        } finally {
-            closeQuietly(outputStream);
+            return new MultipleReader(outputStream.toByteArray());
         }
-        return new MultipleReader(outputStream.toByteArray());
     }
 
     public InputStream getInputStream() {

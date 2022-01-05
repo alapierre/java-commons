@@ -51,7 +51,7 @@ public class PivotTableExcelExporter {
         Row row ;
         Cell cell;
 
-        Row header = addHeader(columns, sheet, cs);
+        addHeader(columns, sheet, cs);
 
         PivotTableModelImpl.RowIterator rows = (PivotTableModelImpl.RowIterator) pivotTableModel.iterator();
 
@@ -107,7 +107,7 @@ public class PivotTableExcelExporter {
         autoSizeColumn(sheet, colIndex);
     }
 
-    public void saveWorkbook(File file) throws FileNotFoundException, IOException {
+    public void saveWorkbook(File file) throws IOException {
 
         if (wb == null) {
             createWorkbook();

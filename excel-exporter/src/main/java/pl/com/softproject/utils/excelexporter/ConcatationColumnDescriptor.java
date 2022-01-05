@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ConcatationColumnDescriptor extends ColumnDescriptor {
 
-    protected List<String> propertyNames = new ArrayList<String>();
+    protected List<String> propertyNames = new ArrayList<>();
 
     public ConcatationColumnDescriptor(String headerName, String propertyName) {
         super(headerName, propertyName);
@@ -27,7 +27,7 @@ public class ConcatationColumnDescriptor extends ColumnDescriptor {
     }
 
     public List<ColumnDescriptor> getColumnDescriptors() {
-        List<ColumnDescriptor> result = new ArrayList<ColumnDescriptor>(propertyNames.size());
+        List<ColumnDescriptor> result = new ArrayList<>(propertyNames.size());
         for(String propName : propertyNames) {
             result.add(new ColumnDescriptor("", propName));
         }

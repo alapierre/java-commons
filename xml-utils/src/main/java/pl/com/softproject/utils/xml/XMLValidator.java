@@ -12,6 +12,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.util.JAXBSource;
@@ -30,13 +31,12 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *
  * @author adrian
  */
 @Slf4j
 public class XMLValidator {
 
-   /**
+    /**
      * Sprawdza składnie XML w przekazanym dokumencie
      *
      * @param reader - Reader do dokumentu XML
@@ -47,30 +47,37 @@ public class XMLValidator {
      */
     public static boolean checkSyntax(Reader reader, Collection<SAXParseException> errors) throws ParserConfigurationException, IOException {
 
-       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-       dbf.setValidating(false);
-       dbf.setNamespaceAware(true);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setValidating(false);
+        dbf.setNamespaceAware(true);
 
-       DocumentBuilder builder = dbf.newDocumentBuilder();
-       builder.setErrorHandler(new XMLErrorHandler(errors));
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-       InputSource source = new InputSource(reader);
+        // completely disable external entities declarations:
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new XMLErrorHandler(errors));
+
+        InputSource source = new InputSource(reader);
         try {
             builder.parse(source);
-        } catch (SAXException ignore) {}
+        } catch (SAXException ignore) {
+        }
 
-       return errors.isEmpty();
+        return errors.isEmpty();
     }
 
     /**
      * Validuje XML względem XML Schemy
      *
-     * @param reader - Reader do dokumentu XML
+     * @param reader       - Reader do dokumentu XML
      * @param schemaSource - zasób pozwalający odczytać schemę XML, jeżli jest null to zostanie użyta schema wskazana w atrybucie schemaLocation z dokumentu XML
-     * @param errors  - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
+     * @param errors       - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
      * @return - true jeśli dokument validuje się
      * @throws SAXException - jeśli nie można zainicjować parsera
-     * @throws IOException - jeśli nie można czytać z Readera
+     * @throws IOException  - jeśli nie można czytać z Readera
      */
     public static boolean validate(Reader reader, Source schemaSource, Collection<SAXParseException> errors) throws SAXException, IOException {
         return validate(reader, new Source[]{schemaSource}, errors);
@@ -104,18 +111,19 @@ public class XMLValidator {
      * Validuje XML względem XML Schemy, lokalizacja schemy będzie pobrana z atrybutu schemaLocation z dokumentu XML
      *
      * @param reader - Reader do dokumentu XML
-     * @param errors  - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
+     * @param errors - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
      * @return - true jeśli dokument validuje się
      * @throws SAXException - jeśli nie można zainicjować parsera
-     * @throws IOException - jeśli nie moďżna czytać z Readera
+     * @throws IOException  - jeśli nie moďżna czytać z Readera
      */
     public static boolean validate(Reader reader, Collection<SAXParseException> errors) throws SAXException, IOException {
-        return validate(reader, (Source)null, errors);
+        return validate(reader, (Source) null, errors);
     }
 
     /**
      * Waliduje XML względem XML Schemy, lokalizacja schemy będzie pobrana z atrybutu schemaLocation z dokumentu XML
      * Metoda z założenia, nigdy nie rzuca wyąkami. Gdy walidacje nie przejdzie zwraca po prostu "false".
+     *
      * @param <T>
      * @param jaxbObject - dokument który powstał‚ w wyniku wywołania metody "unmarshal". Np. DsmlDocument lub DomainsDocument.
      * @param xsdFSource - nazwa pliku xsd, jeśli jest null to zostanie użyta schema wskazana w atrybucie schemaLocation z dokumentu XML.
@@ -131,7 +139,7 @@ public class XMLValidator {
 
             SchemaFactory factory = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = xsdFSource == null ? factory.newSchema() : factory.newSchema(xsdFSource);
-            Validator validator = schema.newValidator();        
+            Validator validator = schema.newValidator();
 
             if (exceptions == null)
                 exceptions = new ArrayList<>();
@@ -144,7 +152,7 @@ public class XMLValidator {
 
         } catch (SAXException | JAXBException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new XMLParseException(ex.getMessage(), ex);
         } catch (Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -191,16 +199,16 @@ public class XMLValidator {
         public void fatalError(SAXParseException exception) throws SAXException {
             errors.add(exception);
         }
-    }   
-        
+    }
+
     public static class XMLErrorExtensionHandler extends XMLErrorHandler {
-        
+
         XMLErrorExtensionHandler(List<SAXParseException> exceptions) {
             super(exceptions);
         }
-        
+
         @Override
-        public void warning(SAXParseException exception) throws SAXException {            
+        public void warning(SAXParseException exception) throws SAXException {
             String message = exception.getMessage() != null ? exception.getMessage() : "";
             log.warn(message, exception);
         }

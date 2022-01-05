@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
  * @author Adrian Lapierre <adrian@softproject.com.pl>
  */
 public class DataTools {
-    
+
     private static final int MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
 
     /**
@@ -33,7 +33,7 @@ public class DataTools {
         }
 
         //reset all hours mins and secs to zero on start date
-        Calendar startCal = GregorianCalendar.getInstance();
+        Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
         startCal.set(Calendar.HOUR_OF_DAY, 0);
         startCal.set(Calendar.MINUTE, 0);
@@ -41,7 +41,7 @@ public class DataTools {
         long startTime = startCal.getTimeInMillis();
 
         //reset all hours mins and secs to zero on end date
-        Calendar endCal = GregorianCalendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
         endCal.setTime(end);
         endCal.set(Calendar.HOUR_OF_DAY, 0);
         endCal.set(Calendar.MINUTE, 0);
@@ -50,17 +50,17 @@ public class DataTools {
 
         return (endTime - startTime) / MILLISECONDS_IN_DAY;
     }
-    
+
     public static Date convertXMLCalendar(XMLGregorianCalendar calendar) {
         return calendar.toGregorianCalendar().getTime();
     }
 
     public static XMLGregorianCalendar toXMLCalendar(Date date) {
-        
-        GregorianCalendar c = new GregorianCalendar(); 
+
+        GregorianCalendar c = new GregorianCalendar();
         c.setTime(date);
-        
-        try {          
+
+        try {
             XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DATE), 0);
             return xmlCal;
         } catch (DatatypeConfigurationException ex) {
@@ -69,18 +69,18 @@ public class DataTools {
     }
 
     public static Date addDaysToDate(Date start, int days) {
-        Calendar calendar = GregorianCalendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
         calendar.add(Calendar.DAY_OF_MONTH, days);
-        
+
         return calendar.getTime();
     }
-    
+
     public static String formatDateWithTime(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sXXX");
         return df.format(date);
     }
-    
+
     public static String formatDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(date);

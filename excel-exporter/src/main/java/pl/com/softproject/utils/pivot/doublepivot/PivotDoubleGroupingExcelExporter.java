@@ -16,7 +16,7 @@ import java.util.LinkedHashSet;
  *
  * @author Marcin Jasiński {@literal <mkjasinski@gmail.com>}
  */
-public class PivotDoubleGroupingExcelExporter implements Serializable {
+public class PivotDoubleGroupingExcelExporter {
 
     private Workbook workbook;
     private ExcelCellRenderer excelCellRenderer;

@@ -293,22 +293,18 @@ public final class DateUtils {
     }
 
     public static LocalDate lastDayOfMonth(@NotNull LocalDate initial) {
-        Objects.requireNonNull(initial, "Data nie może być null");
         return initial.withDayOfMonth(initial.lengthOfMonth());
     }
 
     public static LocalDate firstDayOfMonth(@NotNull LocalDate initial) {
-        Objects.requireNonNull(initial, "Data nie może być null");
         return initial.withDayOfMonth(1);
     }
 
     public static LocalDate firstDayOfYear(@NotNull LocalDate initial) {
-        Objects.requireNonNull(initial, "Data nie może być null");
         return initial.withDayOfMonth(1).withMonth(Month.JANUARY.getValue());
     }
 
     public static LocalDate lastDayOfYear(@NotNull LocalDate initial) {
-        Objects.requireNonNull(initial, "Data nie może być null");
         return initial.withMonth(Month.DECEMBER.getValue()).withDayOfMonth(31);
     }
 
@@ -320,7 +316,6 @@ public final class DateUtils {
     }
 
     public static int weekNumber(@NotNull LocalDate initial) {
-        Objects.requireNonNull(initial, "Data nie może być null");
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         return initial.get(weekFields.weekOfWeekBasedYear());
     }

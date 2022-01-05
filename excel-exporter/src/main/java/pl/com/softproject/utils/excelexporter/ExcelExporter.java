@@ -109,7 +109,7 @@ public class ExcelExporter {
             createCell(row, bean, column);
         }
         for(ColumnDescriptor column : additionalColumns) {
-            if(additionalBeans != null && !(additionalColumns.indexOf(column) >= additionalBeans.size()))
+            if(additionalBeans != null && additionalColumns.indexOf(column) < additionalBeans.size())
                 createCell(row, additionalBeans.get(additionalColumns.indexOf(column)), column);
         }
         currentColumnNumber = 0;
@@ -139,7 +139,7 @@ public class ExcelExporter {
      * @throws FileNotFoundException — jeśli ścieżka do pliku nie istnieje
      * @throws IOException inne błędy IO
      */
-    public void save(File outputFile) throws FileNotFoundException, IOException {
+    public void save(File outputFile) throws IOException {
         OutputStream os = new FileOutputStream(outputFile);
         wb.write(os);
         os.close();
@@ -405,12 +405,12 @@ public class ExcelExporter {
 
     public void setCellStyleRedBold(int row, int cell) {
 
-        HSSFCellStyle my_style = wb.createCellStyle();
-        HSSFFont my_font = wb.createFont();
-        my_font.setBold(true);
-        my_font.setColor(HSSFFont.COLOR_RED);
-        my_style.setFont(my_font);
-        sheet.getRow(row).getCell(cell).setCellStyle(my_style);
+        HSSFCellStyle style = wb.createCellStyle();
+        HSSFFont font = wb.createFont();
+        font.setBold(true);
+        font.setColor(Font.COLOR_RED);
+        style.setFont(font);
+        sheet.getRow(row).getCell(cell).setCellStyle(style);
     }
 
     public void setCellStyleColor(int row, int cell, int r, int g, int b) {

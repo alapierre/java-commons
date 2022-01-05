@@ -13,7 +13,7 @@ package pl.com.softproject.utils.excelexporter;
  */
 public abstract class EnumeratedColumnDescription<T> extends ColumnDescriptor {
 
-    public EnumeratedColumnDescription(String headerName) {
+    protected EnumeratedColumnDescription(String headerName) {
         super(headerName, "not-existent-property");
     }
 

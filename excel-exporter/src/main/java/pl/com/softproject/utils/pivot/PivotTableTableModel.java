@@ -16,11 +16,13 @@ import java.util.*;
 @Slf4j
 public class PivotTableTableModel<T> extends AbstractTableModel {
 
+    private static final long serialVersionUID = 1L;
+
     protected PivotTableModel pivot = new PivotTableModelImpl();
 
     protected Object[][] dataTab;
-    protected String columnNames[];
-    protected String rowNames[];
+    protected String[] columnNames;
+    protected String[] rowNames;
     protected int columnCount;
     protected int rowCount;
 
