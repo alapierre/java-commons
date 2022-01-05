@@ -37,6 +37,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=alapierre_java-commons
+      - name: test env
+        run: echo ${{ secrets.OSSRH_USERNAME }} ${{ secrets.OSSRH_TOKEN }}
       - name: deploy snapshots
         if: github.event_name == 'push'
         run: mvn --batch-mode deploy
