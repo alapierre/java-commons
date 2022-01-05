@@ -2,7 +2,7 @@
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
 
-## Commons Java utils
+## Commons Java utils 
 
 - XML Utils - parse and validate XML files
 - IO utils - eg. MultipleReader for processing date in RAM
