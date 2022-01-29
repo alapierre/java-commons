@@ -41,6 +41,18 @@ public final class DateUtils {
         return day.getDayOfWeek().getValue() == 6;
     }
 
+    public static Date atStartOfDay(Date date) {
+        LocalDateTime localDateTime = asLocalDateTime(date);
+        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+        return asDate(startOfDay);
+    }
+
+    public static Date atEndOfDay(Date date) {
+        LocalDateTime localDateTime = asLocalDateTime(date);
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        return asDate(endOfDay);
+    }
+
     @Contract("null -> null")
     public static Date asDate(LocalDate localDate) {
         return localDate != null ? Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()) : null;

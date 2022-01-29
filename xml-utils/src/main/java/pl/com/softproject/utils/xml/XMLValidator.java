@@ -70,14 +70,14 @@ public class XMLValidator {
     }
 
     /**
-     * Validuje XML względem XML Schemy
+     * Waliduje XML względem XML Schemy
      *
      * @param reader       - Reader do dokumentu XML
      * @param schemaSource - zasób pozwalający odczytać schemę XML, jeżli jest null to zostanie użyta schema wskazana w atrybucie schemaLocation z dokumentu XML
      * @param errors       - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
      * @return - true jeśli dokument validuje się
-     * @throws SAXException - jeśli nie można zainicjować parsera
-     * @throws IOException  - jeśli nie można czytać z Readera
+     * @throws SAXException — jeśli nie można zainicjować parsera
+     * @throws IOException — jeśli nie można czytać z Readera
      */
     public static boolean validate(Reader reader, Source schemaSource, Collection<SAXParseException> errors) throws SAXException, IOException {
         return validate(reader, new Source[]{schemaSource}, errors);

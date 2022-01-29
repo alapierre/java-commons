@@ -1,5 +1,6 @@
 package pl.com.softproject.utils.xml.stax;
 
+import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -10,8 +11,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,7 +37,52 @@ public class ElementFinder {
         }
     }
 
-    public Optional<XmlElement> find(Reader xml, String pathToFind) throws XMLStreamException {
+    public Set<XmlElement> find(File xml, @NotNull Set<String> pathsToFind) throws XMLStreamException, IOException {
+        try (val reader = new FileReader(xml)) {
+            return find(reader, pathsToFind);
+        }
+    }
+
+    @NotNull
+    public Set<XmlElement> find(@NotNull Reader xml, @NotNull Set<String> pathsToFind) throws XMLStreamException {
+
+        path.clear();
+
+        XMLEventReader eventReader = null;
+        val res = new HashSet<XmlElement>();
+
+        try {
+            eventReader = factory.createXMLEventReader(xml);
+
+            while (eventReader.hasNext()) {
+
+                val xmlEvent = eventReader.nextEvent();
+
+                if (xmlEvent.isStartElement()) {
+                    val startElement = xmlEvent.asStartElement();
+                    path.addLast(startElement.getName().getLocalPart());
+                    val pathAsString = String.join("/", path);
+                    if (pathsToFind.contains(pathAsString)) {
+                        res.add(createXmlElement(xmlEvent, eventReader));
+                    }
+                } else if(xmlEvent.isEndElement()) {
+                    path.removeLast();
+                }
+            }
+
+        } finally {
+            if (eventReader != null) {
+                try {
+                    eventReader.close();
+                } catch (XMLStreamException ignore) {
+                    // ignore exception on close
+                }
+            }
+        }
+        return res;
+    }
+
+    public Optional<XmlElement> find(@NotNull Reader xml, @NotNull String pathToFind) throws XMLStreamException {
 
         path.clear();
 
