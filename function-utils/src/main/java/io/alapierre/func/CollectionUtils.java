@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -58,6 +59,17 @@ public class CollectionUtils {
     @Contract(value = "null -> true", pure = true)
     public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
+    }
+
+    /**
+     * Weryfikuje czy przekazana mapa jest pusta lub równa null
+     *
+     * @param map mapa wejściowa
+     * @return false, jeśli mapa nie jest pusta
+     */
+    @Contract(value = "null -> true", pure = true)
+    public static boolean isEmpty(@Nullable Map<?, ?> map) {
+        return map == null || map.isEmpty();
     }
 
 }

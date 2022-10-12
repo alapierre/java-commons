@@ -1,16 +1,14 @@
 package io.alapierre.io;
 
 import java.awt.*;
+import java.awt.List;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Adrian Lapierre {@literal <alapierre@soft-project.pl>}
@@ -67,12 +65,14 @@ public class FileUtil {
             if(Files.isRegularFile(inputPath)) {
                 return Collections.singletonList(inputPath.toFile());
             } else {
-                DirectoryStream<Path> re = Files.newDirectoryStream(inputPath, path -> path.toString().endsWith(fileExtension));
-                LinkedList<File> ret = new LinkedList<>();
-                re.forEach(path -> {
-                    ret.add(path.toFile());
-                });
-                return ret;
+                try (DirectoryStream<Path> re = Files.newDirectoryStream(inputPath, path -> path.toString().endsWith(fileExtension))) {
+
+                    ArrayList<File> ret = new ArrayList<>();
+                    re.forEach(path -> {
+                        ret.add(path.toFile());
+                    });
+                    return ret;
+                }
             }
         } else throw new IOException("File or path not exist");
     }

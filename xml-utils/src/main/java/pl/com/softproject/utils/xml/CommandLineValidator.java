@@ -26,7 +26,7 @@ public class CommandLineValidator {
         System.out.println("\nCommand Line XML Validator");
         System.out.println("--------------------------");
 
-        Reader reader = new FileReader(new File(fileName));
+        Reader reader = new FileReader(fileName);
         Collection<SAXParseException> errors = new ArrayList<SAXParseException>();
 
         System.out.println("\nStart syntax checking\n");
@@ -45,7 +45,7 @@ public class CommandLineValidator {
 
         System.out.println("\nStart validation\n");
 
-        reader = new FileReader(new File(fileName));
+        reader = new FileReader(fileName);
         valid = XMLValidator.validate(reader, errors);
 
         if (!valid) {
