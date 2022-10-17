@@ -41,7 +41,7 @@
 
     <groupId>io.alapierre.commons</groupId>
     <artifactId>commons</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.4-SNAPSHOT</version>
     <name>Commons Java Utils</name>
 
     <properties>
