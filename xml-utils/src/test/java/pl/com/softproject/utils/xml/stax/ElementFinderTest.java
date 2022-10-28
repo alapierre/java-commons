@@ -8,10 +8,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Adrian Lapierre {@literal al@alapierre.io}
@@ -51,10 +48,10 @@ class ElementFinderTest {
         resp.forEach(System.out::println);
 
         val map = resp.stream()
-                .collect(Collectors.toMap(e -> e.getName().getLocalPart(), XmlElement::getValue));
+                .collect(Collectors.toMap(XmlElement::getPath, XmlElement::getValue));
 
-        Assertions.assertEquals("FV2022/02/150", map.get("P_2"));
-        Assertions.assertEquals("9999999999", map.get("NIP"));
+        Assertions.assertEquals("FV2022/02/150", map.get("Faktura/Fa/P_2"));
+        Assertions.assertEquals("9999999999", map.get("Faktura/Podmiot1/DaneIdentyfikacyjne/NIP"));
 
     }
 

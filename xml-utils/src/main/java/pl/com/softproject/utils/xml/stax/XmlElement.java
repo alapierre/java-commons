@@ -13,6 +13,7 @@ import java.util.Set;
 @Value
 public class XmlElement {
 
+    String path;
     QName name;
     String value;
     Set<Attribute> attributes;

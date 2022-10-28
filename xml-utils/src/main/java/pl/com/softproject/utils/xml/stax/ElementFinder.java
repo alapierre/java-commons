@@ -63,7 +63,7 @@ public class ElementFinder {
                     path.addLast(startElement.getName().getLocalPart());
                     val pathAsString = String.join("/", path);
                     if (pathsToFind.contains(pathAsString)) {
-                        res.add(createXmlElement(xmlEvent, eventReader));
+                        res.add(createXmlElement(xmlEvent, pathAsString, eventReader));
                     }
                 } else if(xmlEvent.isEndElement()) {
                     path.removeLast();
@@ -100,7 +100,7 @@ public class ElementFinder {
                     path.addLast(startElement.getName().getLocalPart());
                     val pathAsString = String.join("/", path);
                     if (pathAsString.equals(pathToFind)) {
-                        return Optional.of(createXmlElement(xmlEvent, eventReader));
+                        return Optional.of(createXmlElement(xmlEvent, pathAsString, eventReader));
                     }
                 } else if(xmlEvent.isEndElement()) {
                     path.removeLast();
@@ -119,7 +119,7 @@ public class ElementFinder {
     return Optional.empty();
     }
 
-    protected XmlElement createXmlElement(XMLEvent event, XMLEventReader eventReader) throws XMLStreamException {
+    protected XmlElement createXmlElement(XMLEvent event, String path, XMLEventReader eventReader) throws XMLStreamException {
 
         val startElement = event.asStartElement();
 
@@ -139,7 +139,7 @@ public class ElementFinder {
             }
         }
 
-        return new XmlElement(name, value, attributes);
+        return new XmlElement(path, name, value, attributes);
     }
 
 }
