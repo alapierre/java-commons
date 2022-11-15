@@ -169,7 +169,7 @@
                 <artifactId>logback-classic</artifactId>
                 <groupId>ch.qos.logback</groupId>
                 <optional>true</optional>
-                <version>1.2.10</version>
+                <version>1.4.4</version>
             </dependency>
 
             <dependency>
