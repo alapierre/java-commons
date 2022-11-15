@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
 
 /**
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public class DataTools {
 

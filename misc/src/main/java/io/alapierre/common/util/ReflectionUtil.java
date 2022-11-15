@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 /**
- * @author Piotr Puchta <ppuchta@soft-project.pl>
+ * @author Piotr Puchta {@literal <ppuchta@soft-project.pl>}
  */
 @SuppressWarnings("unused")
 public final class ReflectionUtil {

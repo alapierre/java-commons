@@ -5,7 +5,7 @@ package pl.com.softproject.utils.xml;
 
 /**
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public class XMLParseException extends RuntimeException {
 
@@ -23,5 +23,5 @@ public class XMLParseException extends RuntimeException {
 
     public XMLParseException() {
     }
-    
+
 }
