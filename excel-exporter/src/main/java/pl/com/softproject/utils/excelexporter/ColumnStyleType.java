@@ -3,7 +3,7 @@ package pl.com.softproject.utils.excelexporter;
 /**
  * Enum ColumnStyleType
  *
- * @author Mateusz Mądry <mmadry@soft-project.pl>
+ * @author Mateusz Mądry {@literal <mmadry@soft-project.pl>}
  */
 public enum ColumnStyleType {
 

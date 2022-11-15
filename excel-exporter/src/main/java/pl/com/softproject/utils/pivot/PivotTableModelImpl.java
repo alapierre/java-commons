@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 /**
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public class PivotTableModelImpl implements Iterable<Map<String, Object>>, PivotTableModel {
 

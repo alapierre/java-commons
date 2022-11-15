@@ -7,7 +7,7 @@ package pl.com.softproject.utils.excelexporter;
 /**
  * Służy do dodawania kolumn, których wartość jest wyliczana poza beanem
  *
- * @author <a href="mailto:alapierre@soft-project.pl">Adrian Lapierre</a>
+ * @author {@literal al@alapierre.io}
  * $Rev: $, $LastChangedBy: $
  * $LastChangedDate: $
  */

@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Serializuje obiekty do pliku .xls
  *
- * @author <a href="mailto:alapierre@soft-project.pl">Adrian Lapierre</a>
+ * @author {@literal al@alapierre.io}
  */
 @SuppressWarnings("unused")
 @Slf4j

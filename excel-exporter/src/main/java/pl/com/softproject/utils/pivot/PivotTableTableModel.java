@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  *
- * @author Adrian Lapierre <alapierre@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 @Slf4j
 public class PivotTableTableModel<T> extends AbstractTableModel {

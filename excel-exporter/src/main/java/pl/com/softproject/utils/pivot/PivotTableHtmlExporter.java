@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  *
- * @author Adrian Lapierre <adrian@soft-project.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public class PivotTableHtmlExporter {
 

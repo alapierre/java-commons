@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public class PivotTableExcelExporter {
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author <a href="mailto:alapierre@soft-project.pl">Adrian Lapierre</a>
+ * @author {@literal al@alapierre.io}
  * $Rev: $, $LastChangedBy: $
  * $LastChangedDate: $
  */

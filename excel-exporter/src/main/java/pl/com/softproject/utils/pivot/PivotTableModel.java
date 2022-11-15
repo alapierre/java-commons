@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public interface PivotTableModel extends Serializable {
 

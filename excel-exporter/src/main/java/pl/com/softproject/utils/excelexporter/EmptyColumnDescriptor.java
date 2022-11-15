@@ -7,7 +7,7 @@ package pl.com.softproject.utils.excelexporter;
 /**
  * Służy do opisania pustej kolumny, takiej która nie pochodzi z beana
  *
- * @author <a href="mailto:alapierre@soft-project.pl">Adrian Lapierre</a>
+ * @author {@literal al@alapierre.io}
  * $Rev: $, $LastChangedBy: $
  * $LastChangedDate: $
  */

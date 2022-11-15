@@ -13,7 +13,7 @@ import java.util.Iterator;
 /**
  * Służy do obsługi property, które są kolekcjami
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 @Slf4j
 public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescription<String> {

@@ -5,7 +5,7 @@ package pl.com.softproject.utils.pivot;
 
 /**
  *
- * @author Adrian Lapierre <alapierre@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public class RowKey {
 

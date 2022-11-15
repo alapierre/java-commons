@@ -6,10 +6,10 @@ package pl.com.softproject.utils.excelexporter;
 
 /**
  *
- * @author Adrian Lapierre <adrian@softproject.com.pl>
+ * @author Adrian Lapierre {@literal al@alapierre.io}
  */
 public interface ColumnValueFormatter {
-    
-    String format(Object value); 
-    
+
+    String format(Object value);
+
 }

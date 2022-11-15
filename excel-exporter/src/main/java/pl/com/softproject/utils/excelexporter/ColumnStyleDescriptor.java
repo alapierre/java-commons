@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Class ColumnStyleDescriptor
  *
- * @author Mateusz Mądry <mmadry@soft-project.pl>
+ * @author Mateusz Mądry {@literal <mmadry@soft-project.pl>}
  */
 @Data
 @AllArgsConstructor

@@ -7,7 +7,7 @@ package pl.com.softproject.utils.excelexporter;
 /**
  * Opisuje kolumnę w tworzonym pliku .xls
  *
- * @author <a href="mailto:alapierre@soft-project.pl">Adrian Lapierre</a>
+ * @author {@literal al@alapierre.io}
  * $Rev: $, $LastChangedBy: $
  * $LastChangedDate: $
  */
@@ -34,7 +34,7 @@ public class ColumnDescriptor {
         this.propertyName = propertyName;
         this.styleDescriptor = new ColumnStyleDescriptor(excelFormatMask, null);
     }
-    
+
     public ColumnDescriptor(String headerName, String propertyName, ColumnValueFormatter formatter) {
         this.headerName = headerName;
         this.propertyName = propertyName;
@@ -55,7 +55,7 @@ public class ColumnDescriptor {
         this.columns = columns;
         this.styleDescriptor = new ColumnStyleDescriptor(null, columnStyleType);
     }
-    
+
     public String getHeaderName() {
         return headerName;
     }
