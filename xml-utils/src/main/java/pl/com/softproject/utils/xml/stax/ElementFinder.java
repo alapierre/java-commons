@@ -1,9 +1,10 @@
 package pl.com.softproject.utils.xml.stax;
 
-import com.sun.istack.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -27,24 +28,24 @@ public class ElementFinder {
     private final XMLInputFactory factory = XMLInputFactory.newFactory();
     private final LinkedList<String> path = new LinkedList<>();
 
-    public Optional<XmlElement> find(String xml, String pathToFind) throws XMLStreamException {
+    public Optional<XmlElement> find(@NonNull String xml, @NonNull String pathToFind) throws XMLStreamException {
         return find(new StringReader(xml), pathToFind);
     }
 
-    public Optional<XmlElement> find(File xml, String pathToFind) throws XMLStreamException, IOException {
+    public Optional<XmlElement> find(@NonNull File xml, @NonNull String pathToFind) throws XMLStreamException, IOException {
         try (val reader = new FileReader(xml)) {
             return find(reader, pathToFind);
         }
     }
 
-    public Set<XmlElement> find(File xml, @NotNull Set<String> pathsToFind) throws XMLStreamException, IOException {
+    public Set<XmlElement> find(@NonNull File xml, @NonNull Set<String> pathsToFind) throws XMLStreamException, IOException {
         try (val reader = new FileReader(xml)) {
             return find(reader, pathsToFind);
         }
     }
 
     @NotNull
-    public Set<XmlElement> find(@NotNull Reader xml, @NotNull Set<String> pathsToFind) throws XMLStreamException {
+    public Set<XmlElement> find(@NonNull Reader xml, @NonNull Set<String> pathsToFind) throws XMLStreamException {
 
         path.clear();
 
@@ -82,7 +83,7 @@ public class ElementFinder {
         return res;
     }
 
-    public Optional<XmlElement> find(@NotNull Reader xml, @NotNull String pathToFind) throws XMLStreamException {
+    public Optional<XmlElement> find(@NonNull Reader xml, @NonNull String pathToFind) throws XMLStreamException {
 
         path.clear();
 
@@ -119,7 +120,7 @@ public class ElementFinder {
     return Optional.empty();
     }
 
-    protected XmlElement createXmlElement(XMLEvent event, String path, XMLEventReader eventReader) throws XMLStreamException {
+    protected XmlElement createXmlElement(@NonNull XMLEvent event, @NonNull String path, @NonNull XMLEventReader eventReader) throws XMLStreamException {
 
         val startElement = event.asStartElement();
 
