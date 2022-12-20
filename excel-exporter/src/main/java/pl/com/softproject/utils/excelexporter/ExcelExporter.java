@@ -256,6 +256,7 @@ public class ExcelExporter {
         sheet = wb.createSheet(name);
         currentColumnNumber = 0;
         currentRowNumber = 0;
+        clearColumns();
     }
 
     public Workbook getWorkbook() {
