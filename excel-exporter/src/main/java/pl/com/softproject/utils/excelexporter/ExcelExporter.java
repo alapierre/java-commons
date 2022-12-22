@@ -6,13 +6,19 @@ package pl.com.softproject.utils.excelexporter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -31,9 +37,9 @@ public class ExcelExporter {
     protected List<ColumnDescriptor> additionalColumns = new LinkedList<>();
     protected OutputStream out;
     protected String sheetName;
-    protected HSSFSheet sheet;
-    protected HSSFWorkbook wb;
-    protected HSSFRow header;
+    protected Sheet sheet;
+    protected Workbook wb;
+    protected Row header;
     protected short currentRowNumber;
     protected int currentColumnNumber;
 
@@ -86,7 +92,7 @@ public class ExcelExporter {
         if(currentRowNumber == 0)
             createHeaderRow();
 
-        HSSFRow row = sheet.createRow(currentRowNumber);
+        Row row = sheet.createRow(currentRowNumber);
         for(ColumnDescriptor column : columns) {
             createCell(row, bean, column);
         }
@@ -104,7 +110,7 @@ public class ExcelExporter {
             createHeaderRowWithAdditional(additionalColumns);
         }
 
-        HSSFRow row = sheet.createRow(currentRowNumber);
+        Row row = sheet.createRow(currentRowNumber);
         for(ColumnDescriptor column : columns) {
             createCell(row, bean, column);
         }
@@ -140,7 +146,7 @@ public class ExcelExporter {
      * @throws IOException inne błędy IO
      */
     public void save(File outputFile) throws IOException {
-        OutputStream os = new FileOutputStream(outputFile);
+        OutputStream os = Files.newOutputStream(outputFile.toPath());
         wb.write(os);
         os.close();
     }
@@ -247,7 +253,7 @@ public class ExcelExporter {
     }
 
     protected void createExcelSheet() {
-        wb = new HSSFWorkbook();
+        wb = new XSSFWorkbook();
         sheet = wb.createSheet(sheetName);
     }
 
@@ -298,17 +304,17 @@ public class ExcelExporter {
         }
     }
 
-    protected void createCell(HSSFRow row, Object bean, ColumnDescriptor columnDescriptor) {
+    protected void createCell(Row row, Object bean, ColumnDescriptor columnDescriptor) {
 
         if(columnDescriptor.getPropertyName() == null) {
             currentColumnNumber++;
             return;
         }
 
-        Object property = null;
+        Object property;
 
         if(columnDescriptor instanceof EnumeratedColumnDescription) {
-            property = ((EnumeratedColumnDescription)columnDescriptor).getValue(currentRowNumber, bean);
+            property = ((EnumeratedColumnDescription<?>)columnDescriptor).getValue(currentRowNumber, bean);
         } else if(columnDescriptor instanceof ConcatationColumnDescriptor) {
             property = getMultiProperty(bean, (ConcatationColumnDescriptor)columnDescriptor);
         }
@@ -320,7 +326,7 @@ public class ExcelExporter {
             return;
         }
 
-        HSSFCell cell;
+        Cell cell;
         if(columnDescriptor.getColumnValueFormatter() != null) {
             cell = row.createCell(currentColumnNumber++);
             cell.setCellValue(columnDescriptor.getColumnValueFormatter().format(property));
@@ -406,8 +412,8 @@ public class ExcelExporter {
 
     public void setCellStyleRedBold(int row, int cell) {
 
-        HSSFCellStyle style = wb.createCellStyle();
-        HSSFFont font = wb.createFont();
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
         font.setBold(true);
         font.setColor(Font.COLOR_RED);
         style.setFont(font);
@@ -415,24 +421,20 @@ public class ExcelExporter {
     }
 
     public void setCellStyleColor(int row, int cell, int r, int g, int b) {
-        HSSFCellStyle cellStyle = wb.createCellStyle();
+        CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        HSSFPalette palette = wb.getCustomPalette();
-        HSSFColor color = palette.findSimilarColor(r, g, b);
-        cellStyle.setFillForegroundColor(color.getIndex());
+        cellStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(r,g,b),new DefaultIndexedColorMap()));
         sheet.getRow(row).getCell(cell).setCellStyle(cellStyle);
     }
 
-    public void setCellStyle(int row, int cell, HSSFCellStyle cellStyle) {
+    public void setCellStyle(int row, int cell, CellStyle cellStyle) {
         sheet.getRow(row).getCell(cell).setCellStyle(cellStyle);
     }
 
-    public HSSFCellStyle createCellStyleColor(int r, int g, int b){
-        HSSFCellStyle cellStyle = wb.createCellStyle();
+    public CellStyle createCellStyleColor(int r, int g, int b){
+        CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        HSSFPalette palette = wb.getCustomPalette();
-        HSSFColor color = palette.findSimilarColor(r, g, b);
-        cellStyle.setFillForegroundColor(color.getIndex());
+        cellStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(r,g,b),new DefaultIndexedColorMap()));
         return cellStyle;
     }
 
