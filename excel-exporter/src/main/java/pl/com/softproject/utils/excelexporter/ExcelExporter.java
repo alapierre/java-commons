@@ -40,7 +40,7 @@ public class ExcelExporter {
     protected Sheet sheet;
     protected Workbook wb;
     protected Row header;
-    protected short currentRowNumber;
+    protected int currentRowNumber;
     protected int currentColumnNumber;
 
     protected DataFormat format;
