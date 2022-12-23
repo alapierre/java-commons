@@ -54,7 +54,7 @@ public class PivotTableExcelExporter {
 
         PivotTableModelImpl.RowIterator rows = (PivotTableModelImpl.RowIterator) pivotTableModel.iterator();
 
-        short rownum = 1;
+        int rownum = 1;
 
         while (rows.hasNext()) {
             row = sheet.createRow(rownum++);
@@ -63,7 +63,7 @@ public class PivotTableExcelExporter {
             String rowKey = rows.rowKey();
             cell = row.createCell(0);
             cell.setCellValue(rowKey);
-            short cellnum = 1;
+            int cellnum = 1;
             for (String column : columns) {
                 cell = row.createCell(cellnum++);
                 Object cellValue = pivotRow.get(column);
@@ -120,7 +120,7 @@ public class PivotTableExcelExporter {
     private Row addHeader(String[] columns, Sheet sheet, CellStyle cs) {
 
         Row row = sheet.createRow(0);
-        short cellnum = 1;
+        int cellnum = 1;
 
         for (String colName : columns) {
             Cell cell = row.createCell(cellnum++);

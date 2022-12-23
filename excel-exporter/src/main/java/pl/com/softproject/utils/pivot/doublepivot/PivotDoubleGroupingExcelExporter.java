@@ -51,7 +51,7 @@ public class PivotDoubleGroupingExcelExporter {
                 (PivotDoubleGroupingTableModelImpl.RowIterator) pivotDoubleGroupingTableModel
                         .iterator();
 
-        short rowNumber = 0;
+        int rowNumber = 0;
 
         row = sheet.createRow(rowNumber++);
 
