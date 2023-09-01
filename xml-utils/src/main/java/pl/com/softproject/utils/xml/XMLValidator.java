@@ -5,12 +5,10 @@
 
 package pl.com.softproject.utils.xml;
 
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.xml.sax.*;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -29,6 +27,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author adrian
@@ -83,13 +82,61 @@ public class XMLValidator {
         return validate(reader, new Source[]{schemaSource}, errors);
     }
 
+    /**
+     * Waliduje XML względem XML Schemy
+     *
+     * @param reader       - Reader do dokumentu XML
+     * @param schemaSource - zasób pozwalający odczytać schemę XML, jeżeli jest null to zostanie użyta schema wskazana w atrybucie schemaLocation z dokumentu XML
+     * @param errors       - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
+     * @param features     - lista features, które mają zostać ustawione dla SchemaFactory za pomocą setFeature. Przekazanie błędnych wartości nie powoduje wyrzucenia wyjątku, tylko komunikat w logach
+     * @return - true jeśli dokument validuje się
+     * @throws SAXException — jeśli nie można zainicjować parsera
+     * @throws IOException — jeśli nie można czytać z Readera
+     */
+    public static boolean validate(Reader reader, Source schemaSource, Collection<SAXParseException> errors, Set<SchemaFactoryFeature> features) throws SAXException, IOException {
+        return validate(reader, new Source[]{schemaSource}, errors, features);
+    }
+
+    /**
+     * Waliduje XML względem XML Schemy
+     *
+     * @param reader       - Reader do dokumentu XML
+     * @param schemaSource - tablica zawierająca zasoby pozwalające odczytać schemę XML, jeżeli jest null to zostanie użyta schema wskazana w atrybucie schemaLocation z dokumentu XML
+     * @param errors       - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
+     * @return - true jeśli dokument validuje się
+     * @throws SAXException — jeśli nie można zainicjować parsera
+     * @throws IOException — jeśli nie można czytać z Readera
+     */
     public static boolean validate(Reader reader, Source[] schemaSource, Collection<SAXParseException> errors) throws SAXException, IOException {
+        return validate(reader, schemaSource, errors, Set.of());
+    }
+
+    /**
+     * Waliduje XML względem XML Schemy
+     *
+     * @param reader       - Reader do dokumentu XML
+     * @param schemaSource - tablica zawierająca zasoby pozwalające odczytać schemę XML, jeżeli jest null to zostanie użyta schema wskazana w atrybucie schemaLocation z dokumentu XML
+     * @param errors       - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
+     * @param features     - lista features, które mają zostać ustawione dla SchemaFactory za pomocą setFeature. Przekazanie błędnych wartości nie powoduje wyrzucenia wyjątku, tylko komunikat w logach
+     * @return - true jeśli dokument validuje się
+     * @throws SAXException — jeśli nie można zainicjować parsera
+     * @throws IOException — jeśli nie można czytać z Readera
+     */
+    public static boolean validate(Reader reader, Source[] schemaSource, Collection<SAXParseException> errors, Set<SchemaFactoryFeature> features) throws SAXException, IOException {
 
         errors.clear();
 
         // 1. Lookup a factory for the W3C XML Schema language
         SchemaFactory factory =
                 SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+
+        features.forEach(feature -> {
+            try {
+                factory.setFeature(feature.key,feature.value);
+            } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+                log.warn(e.getMessage());
+            }
+        });
 
         // 2. Compile the schema.
         Schema schema = schemaSource == null ? factory.newSchema() : factory.newSchema(schemaSource);
@@ -105,6 +152,12 @@ public class XMLValidator {
         validator.validate(source);
 
         return errors.isEmpty();
+    }
+
+    @Value
+    public static class SchemaFactoryFeature {
+        String key;
+        boolean value;
     }
 
     /**
