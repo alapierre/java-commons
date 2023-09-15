@@ -51,7 +51,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <junit.version>4.13.2</junit.version>
-        <slf4j-api.version>2.0.7</slf4j-api.version>
+        <slf4j-api.version>2.0.9</slf4j-api.version>
         <annotations.version>24.0.1</annotations.version>
         <lombok.version>1.18.28</lombok.version>
         <junit5.version>5.9.1</junit5.version>
