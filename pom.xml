@@ -59,8 +59,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <jakarta.bind-api.version>2.3.3</jakarta.bind-api.version>
-        <jaxb-runtime.version>2.3.6</jaxb-runtime.version>
+        <jaxb-runtime.version>4.0.2</jaxb-runtime.version>
     </properties>
 
     <build>
@@ -213,15 +212,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>${jaxb-runtime.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jakarta.bind-api.version}</version>
             </dependency>
 
         </dependencies>

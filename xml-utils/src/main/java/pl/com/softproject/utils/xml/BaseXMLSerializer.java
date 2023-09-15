@@ -6,11 +6,12 @@
 package pl.com.softproject.utils.xml;
 
 
+import jakarta.xml.bind.*;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.*;
+
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
@@ -31,7 +32,7 @@ public class BaseXMLSerializer<T> {
     private final Schema schema;
     private final boolean noNameSpace;
 
-    public String schemaLoaction;//= "http://www.uke.gov.pl/euro http://schema.softproject.com.pl/uke/uke-euro.xsd";
+    public String schemaLoaction;
 
     public BaseXMLSerializer(String contextPath, String xsdFileName, String schemaLocation) {
         this(contextPath, xsdFileName, schemaLocation, false);
