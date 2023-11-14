@@ -1,6 +1,6 @@
 package pl.com.softproject.utils.pivot.doublepivot;
 
-import com.google.common.collect.Iterators;
+import io.alapierre.common.util.Iterators;
 import pl.com.softproject.utils.pivot.doublepivot.exception.ColumnNotFoundException;
 import pl.com.softproject.utils.pivot.doublepivot.exception.RowNotFoundException;
 import pl.com.softproject.utils.pivot.doublepivot.exception.SubRowNotFoundException;

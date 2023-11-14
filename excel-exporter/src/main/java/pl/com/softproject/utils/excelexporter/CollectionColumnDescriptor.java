@@ -3,10 +3,8 @@
  */
 package pl.com.softproject.utils.excelexporter;
 
+import jodd.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.PropertyUtils;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -18,14 +16,14 @@ import java.util.Iterator;
 @Slf4j
 public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescription<String> {
 
-    private String propertyName;
+    private final String propertyName;
 
     /**
-     * Jest wywoływana dla każdego elemantu w kolekcji, powinna zwrócić wartość
+     * Jest wywoływana dla każdego elementu w kolekcji, powinna zwrócić wartość,
      * która ma zostać wyświetlona dla pojedyńczego elementu w kolekcji
      *
      * @param rowNumber - numer przetwarzanego wiersza
-     * @param value - wartość z kolecji
+     * @param value     - wartość z kolekcji
      * @return
      */
     public abstract String formatValue(int rowNumber, Object value);
@@ -41,17 +39,15 @@ public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescrip
 
         StringBuilder sb = new StringBuilder();
 
+        Object obj = BeanUtil.pojo.getProperty(bean, propertyName);
 
-        try {
-        Object obj = PropertyUtils.getNestedProperty(bean, propertyName);
+        if (obj instanceof Collection) {
 
-        if(obj instanceof Collection) {
-
-            Collection collection = (Collection)obj;
+            Collection collection = (Collection) obj;
             Iterator iterator = collection.iterator();
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 sb.append(formatValue(rowNumber, iterator.next()));
-                if(iterator.hasNext())
+                if (iterator.hasNext())
                     sb.append(", ");
             }
         } else {
@@ -59,15 +55,7 @@ public abstract class CollectionColumnDescriptor extends EnumeratedColumnDescrip
             return null;
         }
 
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-            throw new PropertyAccessException(ex);
-        } catch (IndexOutOfBoundsException ex) {
-            if(log.isDebugEnabled())
-                log.debug("for property " + propertyName + " " + ex.getMessage());
-            return null;
-        }
         return sb.toString();
     }
-
 
 }

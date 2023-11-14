@@ -4,8 +4,8 @@
 
 package pl.com.softproject.utils.excelexporter;
 
+import jodd.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -372,15 +371,7 @@ public class ExcelExporter {
     }
 
     protected Object getProperty(Object bean, ColumnDescriptor columnDescriptor) {
-        try {
-            return PropertyUtils.getNestedProperty(bean, columnDescriptor.getPropertyName());
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            throw new PropertyAccessException(ex);
-        } catch (IndexOutOfBoundsException ex) {
-            if(log.isDebugEnabled())
-                log.debug("for property " + columnDescriptor.getPropertyName() + " " + ex.getMessage());
-            return null;
-        }
+        return BeanUtil.silent.getProperty(bean, columnDescriptor.getPropertyName());
     }
 
     public boolean isEmpty() {
