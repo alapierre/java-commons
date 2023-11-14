@@ -5,7 +5,7 @@
     <scm>
         <developerConnection>scm:git:git@github.com:alapierre/java-commons.git</developerConnection>
         <url>https://github.com/alapierre/java-commons</url>
-        <tag>1.14</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <url>https://github.com/alapierre/java-commons</url>
@@ -41,7 +41,7 @@
 
     <groupId>io.alapierre.commons</groupId>
     <artifactId>commons</artifactId>
-    <version>1.14</version>
+    <version>1.15-SNAPSHOT</version>
     <name>Commons Java Utils</name>
 
     <properties>
@@ -235,7 +235,7 @@
             <dependency>
                 <groupId>io.alapierre.commons</groupId>
                 <artifactId>misc</artifactId>
-                <version>1.14</version>
+                <version>1.15-SNAPSHOT</version>
             </dependency>
 
         </dependencies>
