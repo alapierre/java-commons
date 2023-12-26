@@ -25,7 +25,7 @@
         <dependency>
             <groupId>io.alapierre.commons</groupId>
             <artifactId>misc</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.14</version>
             <scope>compile</scope>
         </dependency>
 
