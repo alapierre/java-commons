@@ -3,6 +3,9 @@ package pl.com.softproject.utils.excelexporter;
 import lombok.Data;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -12,11 +15,12 @@ import java.util.List;
 public class ExcelExporterTest {
 
     @Test
-    public void test() {
+    public void test() throws IOException {
 
         val r = new Report();
         r.setName("Jan");
         r.setLastName("Kowalski");
+        r.setAddress(List.of("Warszawska", "Marszałkowska"));
 
         List<Report> rows = List.of(r);
 
@@ -24,8 +28,11 @@ public class ExcelExporterTest {
 
         excelExporter.addColumn(new ColumnDescriptor("Name", "name"));
         excelExporter.addColumn(new ColumnDescriptor("Last Name", "lastName"));
+        excelExporter.addColumn(new ColumnDescriptor("Address", "address[1]"));
 
         rows.forEach(excelExporter::createRow);
+
+        excelExporter.save(new File("/tmp/sample_excel.xlsx"));
 
     }
 
@@ -34,6 +41,7 @@ public class ExcelExporterTest {
 
         private String name;
         private String LastName;
+        private List<String> address;
 
     }
 
