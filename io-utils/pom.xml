@@ -36,6 +36,7 @@
         <dependency>
             <artifactId>logback-classic</artifactId>
             <groupId>ch.qos.logback</groupId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
