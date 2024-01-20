@@ -10,13 +10,15 @@ import jakarta.xml.bind.*;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.net.URL;
-
+import java.util.Set;
 
 
 /**
@@ -34,11 +36,19 @@ public class BaseXMLSerializer<T> {
 
     public String schemaLoaction;
 
+    public BaseXMLSerializer(String contextPath, String xsdFileName, String schemaLocation, Set<XMLValidator.SchemaFactoryFeature> features) {
+        this(contextPath, xsdFileName, schemaLocation, false, features);
+    }
+
     public BaseXMLSerializer(String contextPath, String xsdFileName, String schemaLocation) {
-        this(contextPath, xsdFileName, schemaLocation, false);
+        this(contextPath, xsdFileName, schemaLocation, false, Set.of());
     }
 
     public BaseXMLSerializer(String contextPath, String xsdFileName, String schemaLocation, boolean noNameSpace) {
+        this(contextPath, xsdFileName, schemaLocation, noNameSpace, Set.of());
+    }
+
+    public BaseXMLSerializer(String contextPath, String xsdFileName, String schemaLocation, boolean noNameSpace, Set<XMLValidator.SchemaFactoryFeature> features) {
         this.schemaLoaction = schemaLocation;
         this.noNameSpace = noNameSpace;
 
@@ -46,6 +56,15 @@ public class BaseXMLSerializer<T> {
             jc = JAXBContext.newInstance(contextPath);
 
             SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            features.forEach(feature -> {
+                try {
+                    sf.setFeature(feature.getKey(),feature.isValue());
+                } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+                    log.warn(e.getMessage());
+                }
+            });
+
             URL url = getClass().getClassLoader().getResource(xsdFileName);
             schema = sf.newSchema(url);
         } catch (SAXException | JAXBException ex) {

@@ -164,12 +164,26 @@ public class XMLValidator {
      *
      * @param reader - Reader do dokumentu XML
      * @param errors - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
-     * @return - true jeśli dokument validuje się
+     * @return - true jeśli dokument waliduje się
      * @throws SAXException - jeśli nie można zainicjować parsera
-     * @throws IOException  - jeśli nie moďżna czytać z Readera
+     * @throws IOException  - jeśli nie można czytać z Readera
      */
     public static boolean validate(Reader reader, Collection<SAXParseException> errors) throws SAXException, IOException {
         return validate(reader, (Source) null, errors);
+    }
+
+    /**
+     * Validuje XML względem XML Schemy, lokalizacja schemy będzie pobrana z atrybutu schemaLocation z dokumentu XML
+     *
+     * @param reader - Reader do dokumentu XML
+     * @param errors - zainicjowana kolekcja, w której zostaną zwrócone błędy. Kolekcja zostanie wyzerowana.
+     * @param features lista features, które mają zostać ustawione dla SchemaFactory za pomocą setFeature. Przekazanie błędnych wartości nie powoduje wyrzucenia wyjątku, tylko komunikat w logach
+     * @return - true jeśli dokument waliduje się
+     * @throws SAXException - jeśli nie można zainicjować parsera
+     * @throws IOException  - jeśli nie można czytać z Readera
+     */
+    public static boolean validate(Reader reader, Collection<SAXParseException> errors, Set<SchemaFactoryFeature> features) throws SAXException, IOException {
+        return validate(reader, (Source) null, errors, features);
     }
 
     /**
