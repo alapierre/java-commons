@@ -99,6 +99,25 @@ public class ExcelExporter {
         currentRowNumber++;
     }
 
+    /**
+     * Wariant metody createRow() pozwalający na utworzenie headerów w danym wierszu - przydatna w połączeniu z
+     * goToNextRow() w przypadku ręcznego tworzenia danych przed masowym użyciem niniejszej metody
+     *
+     * @param bean                      JavaBean z danymi do wstawienia w wierszu
+     * @param columnDescriptorHeaderRow Wiersz w którym mają utworzyć się nagłówki naszych kolumn
+     */
+    public void createRow(Object bean, int columnDescriptorHeaderRow) {
+        if (currentRowNumber == columnDescriptorHeaderRow)
+            createHeaderRow();
+
+        Row row = sheet.createRow(currentRowNumber);
+        for (ColumnDescriptor column : columns) {
+            createCell(row, bean, column);
+        }
+        currentColumnNumber = 0;
+        currentRowNumber++;
+    }
+
     public void createRow(Object bean, List<Object> additionalBeans) {
         createRow(bean, additionalBeans, this.additionalColumns);
     }
@@ -411,6 +430,14 @@ public class ExcelExporter {
         sheet.getRow(row).getCell(cell).setCellStyle(style);
     }
 
+    public void setCellStyleBold(int row, int cell) {
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setBold(true);
+        style.setFont(font);
+        sheet.getRow(row).getCell(cell).setCellStyle(style);
+    }
+
     public void setCellStyleColor(int row, int cell, int r, int g, int b) {
         CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -427,6 +454,10 @@ public class ExcelExporter {
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         cellStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(r,g,b),new DefaultIndexedColorMap()));
         return cellStyle;
+    }
+
+    public void goToNextRow() {
+        this.currentRowNumber++;
     }
 
 }
