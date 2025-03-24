@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -545,6 +544,28 @@ public class ExcelExporter {
             .map(this::getColumnIndex)
             .filter(index -> index >= 0)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Adds a summary row with default settings for specified columns.
+     * This is a simple convenience method that doesn't require a config object.
+     *
+     * @param columnsToSum List of column indices to sum (0-based)
+     * @return Row index where the summary was added
+     */
+    public int addSummaryRow(List<Integer> columnsToSum) {
+        return addSummaryRow(columnsToSum, SummaryRowConfig.builder().build());
+    }
+    
+    /**
+     * Adds a summary row with default settings for specified columns by their names.
+     * This is a simple convenience method that doesn't require a config object.
+     *
+     * @param columnNamesToSum List of column names to sum
+     * @return Row index where the summary was added
+     */
+    public int addSummaryRowByColumnNames(List<String> columnNamesToSum) {
+        return addSummaryRowByColumnNames(columnNamesToSum, SummaryRowConfig.builder().build());
     }
 
 }

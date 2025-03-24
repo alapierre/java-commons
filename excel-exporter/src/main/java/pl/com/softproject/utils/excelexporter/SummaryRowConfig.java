@@ -21,7 +21,7 @@ public class SummaryRowConfig {
      * Number of rows to skip from the beginning when calculating the sum (defaults to 0)
      */
     @Builder.Default
-    private int skipFirstRows = 0;
+    private int skipFirstRows = 1;
     
     /**
      * Column index where to put the summary label (defaults to 0, first column)
