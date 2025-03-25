@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 public class ExcelExporter {
 
     private static final String SUM_FORMULA_PATTERN = "SUM(%s%d:%s%d)";
-    private static final String DEFAULT_SUMMARY_LABEL = "Total:";
-    private static final int DEFAULT_LABEL_COLUMN = 0;
     
     protected List<ColumnDescriptor> columns = new LinkedList<>();
     protected List<ColumnDescriptor> additionalColumns = new LinkedList<>();
