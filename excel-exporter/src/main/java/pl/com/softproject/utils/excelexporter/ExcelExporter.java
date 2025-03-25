@@ -477,7 +477,7 @@ public class ExcelExporter {
      * @param config Configuration object for summary row options
      * @return Row index where the summary was added
      */
-    public int addSummaryRow(List<Integer> columnsToSum, SummaryRowConfig config) {
+    public int addSummaryRow(@NotNull List<Integer> columnsToSum, @NotNull SummaryRowConfig config) {
         Row summaryRow = sheet.createRow(currentRowNumber);
         
         addSummaryLabel(summaryRow, config.getSummaryLabel(), config.getLabelColumnIndex(), config.isBoldText());
@@ -496,7 +496,7 @@ public class ExcelExporter {
      * @param config Configuration object for summary row options
      * @return Row index where the summary was added
      */
-    public int addSummaryRowByColumnNames(List<String> columnNamesToSum, SummaryRowConfig config) {
+    public int addSummaryRowByColumnNames(@NotNull List<String> columnNamesToSum, @NotNull SummaryRowConfig config) {
         List<Integer> columnIndices = mapColumnNamesToIndices(columnNamesToSum);
         return addSummaryRow(columnIndices, config);
     }
@@ -578,7 +578,7 @@ public class ExcelExporter {
      * @param columnsToSum List of column indices to sum (0-based)
      * @return Row index where the summary was added
      */
-    public int addSummaryRow(List<Integer> columnsToSum) {
+    public int addSummaryRow(@NotNull List<Integer> columnsToSum) {
         return addSummaryRow(columnsToSum, SummaryRowConfig.builder().build());
     }
     
@@ -589,7 +589,7 @@ public class ExcelExporter {
      * @param columnNamesToSum List of column names to sum
      * @return Row index where the summary was added
      */
-    public int addSummaryRowByColumnNames(List<String> columnNamesToSum) {
+    public int addSummaryRowByColumnNames(@NotNull List<String> columnNamesToSum) {
         return addSummaryRowByColumnNames(columnNamesToSum, SummaryRowConfig.builder().build());
     }
 
