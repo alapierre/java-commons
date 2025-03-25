@@ -28,5 +28,7 @@ public class SummaryRowConfig {
      */
     @Builder.Default
     private int labelColumnIndex = 0;
-
+    
+    @Builder.Default
+    private boolean boldText = false;
 } 

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -389,6 +390,10 @@ public class ExcelExporter {
             cell = row.createCell(currentColumnNumber++);
             cell.setCellValue((Double)property);
             cell.setCellStyle(determinateCellStyle(columnDescriptor.getStyleDescriptor(), styleDefault));
+        } else if(property instanceof BigDecimal) {
+            cell = row.createCell(currentColumnNumber++);
+            cell.setCellValue(((BigDecimal)property).doubleValue());
+            cell.setCellStyle(determinateCellStyle(columnDescriptor.getStyleDescriptor(), styleDefault));
         } else {
             cell = row.createCell(currentColumnNumber++);
             cell.setCellValue(property.toString().trim());
@@ -477,9 +482,9 @@ public class ExcelExporter {
     public int addSummaryRow(List<Integer> columnsToSum, SummaryRowConfig config) {
         Row summaryRow = sheet.createRow(currentRowNumber);
         
-        addSummaryLabel(summaryRow, config.getSummaryLabel(), config.getLabelColumnIndex());
+        addSummaryLabel(summaryRow, config.getSummaryLabel(), config.getLabelColumnIndex(), config.isBoldText());
         
-        addSumFormulas(summaryRow, columnsToSum, config.getSkipFirstRows());
+        addSumFormulas(summaryRow, columnsToSum, config.getSkipFirstRows(), config.isBoldText());
         
         currentRowNumber++;
         
@@ -505,10 +510,19 @@ public class ExcelExporter {
      * @param summaryRow Row where to add the label
      * @param summaryLabel Text for the label (or default if null)
      * @param labelColumnIndex Column index where to put the label
+     * @param boldText Whether to make the text bold
      */
-    private void addSummaryLabel(Row summaryRow, String summaryLabel, int labelColumnIndex) {
+    private void addSummaryLabel(Row summaryRow, String summaryLabel, int labelColumnIndex, boolean boldText) {
         Cell labelCell = summaryRow.createCell(labelColumnIndex);
         labelCell.setCellValue(summaryLabel);
+        
+        if (boldText) {
+            CellStyle boldStyle = wb.createCellStyle();
+            Font font = wb.createFont();
+            font.setBold(true);
+            boldStyle.setFont(font);
+            labelCell.setCellStyle(boldStyle);
+        }
     }
     
     /**
@@ -517,8 +531,9 @@ public class ExcelExporter {
      * @param summaryRow Row where to add the formulas
      * @param columnsToSum Column indices to add formulas for
      * @param skipFirstRows Number of rows to skip from the beginning
+     * @param boldText Whether to make the text bold
      */
-    private void addSumFormulas(Row summaryRow, List<Integer> columnsToSum, int skipFirstRows) {
+    private void addSumFormulas(Row summaryRow, List<Integer> columnsToSum, int skipFirstRows, boolean boldText) {
         for (Integer colIndex : columnsToSum) {
             if (colIndex < 0 || colIndex >= columns.size()) {
                 continue;
@@ -535,7 +550,19 @@ public class ExcelExporter {
             
             ColumnDescriptor column = columns.get(colIndex);
             CellStyle cellStyle = determinateCellStyle(column.getStyleDescriptor(), styleMoney);
-            sumCell.setCellStyle(cellStyle);
+            
+            if (boldText) {
+                CellStyle boldStyle = wb.createCellStyle();
+                boldStyle.cloneStyleFrom(cellStyle);
+                
+                Font font = wb.createFont();
+                font.setBold(true);
+                boldStyle.setFont(font);
+                
+                sumCell.setCellStyle(boldStyle);
+            } else {
+                sumCell.setCellStyle(cellStyle);
+            }
         }
     }
 
