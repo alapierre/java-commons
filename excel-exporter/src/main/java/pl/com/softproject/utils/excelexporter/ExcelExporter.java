@@ -9,19 +9,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Serializuje obiekty do pliku .xls
@@ -32,6 +36,8 @@ import java.util.*;
 @Slf4j
 public class ExcelExporter {
 
+    private static final String SUM_FORMULA_PATTERN = "SUM(%s%d:%s%d)";
+    
     protected List<ColumnDescriptor> columns = new LinkedList<>();
     protected List<ColumnDescriptor> additionalColumns = new LinkedList<>();
     protected OutputStream out;
@@ -382,6 +388,10 @@ public class ExcelExporter {
             cell = row.createCell(currentColumnNumber++);
             cell.setCellValue((Double)property);
             cell.setCellStyle(determinateCellStyle(columnDescriptor.getStyleDescriptor(), styleDefault));
+        } else if(property instanceof BigDecimal) {
+            cell = row.createCell(currentColumnNumber++);
+            cell.setCellValue(((BigDecimal)property).doubleValue());
+            cell.setCellStyle(determinateCellStyle(columnDescriptor.getStyleDescriptor(), styleDefault));
         } else {
             cell = row.createCell(currentColumnNumber++);
             cell.setCellValue(property.toString().trim());
@@ -458,6 +468,129 @@ public class ExcelExporter {
 
     public void goToNextRow() {
         this.currentRowNumber++;
+    }
+
+    /**
+     * Adds a summary row at the bottom of the sheet with SUM formulas for specified columns.
+     *
+     * @param columnsToSum List of column indices to sum (0-based)
+     * @param config Configuration object for summary row options
+     * @return Row index where the summary was added
+     */
+    public int addSummaryRow(@NotNull List<Integer> columnsToSum, @NotNull SummaryRowConfig config) {
+        Row summaryRow = sheet.createRow(currentRowNumber);
+        
+        addSummaryLabel(summaryRow, config.getSummaryLabel(), config.getLabelColumnIndex(), config.isBoldText());
+        
+        addSumFormulas(summaryRow, columnsToSum, config.getSkipFirstRows(), config.isBoldText());
+        
+        currentRowNumber++;
+        
+        return currentRowNumber - 1;
+    }
+    
+    /**
+     * Adds a summary row at the bottom of the sheet with SUM formulas for specified columns by their names.
+     *
+     * @param columnNamesToSum List of column names to sum
+     * @param config Configuration object for summary row options
+     * @return Row index where the summary was added
+     */
+    public int addSummaryRowByColumnNames(@NotNull List<String> columnNamesToSum, @NotNull SummaryRowConfig config) {
+        List<Integer> columnIndices = mapColumnNamesToIndices(columnNamesToSum);
+        return addSummaryRow(columnIndices, config);
+    }
+
+    
+    /**
+     * Adds the summary label to the specified cell of the summary row with appropriate styling.
+     * 
+     * @param summaryRow Row where to add the label
+     * @param summaryLabel Text for the label (or default if null)
+     * @param labelColumnIndex Column index where to put the label
+     * @param boldText Whether to make the text bold
+     */
+    private void addSummaryLabel(Row summaryRow, String summaryLabel, int labelColumnIndex, boolean boldText) {
+        Cell labelCell = summaryRow.createCell(labelColumnIndex);
+        labelCell.setCellValue(summaryLabel);
+        
+        if (boldText) {
+            CellStyle boldStyle = wb.createCellStyle();
+            Font font = wb.createFont();
+            font.setBold(true);
+            boldStyle.setFont(font);
+            labelCell.setCellStyle(boldStyle);
+        }
+    }
+    
+    /**
+     * Adds SUM formulas to the specified columns in the summary row.
+     * 
+     * @param summaryRow Row where to add the formulas
+     * @param columnsToSum Column indices to add formulas for
+     * @param skipFirstRows Number of rows to skip from the beginning
+     * @param boldText Whether to make the text bold
+     */
+    private void addSumFormulas(Row summaryRow, List<Integer> columnsToSum, int skipFirstRows, boolean boldText) {
+        for (Integer colIndex : columnsToSum) {
+            if (colIndex < 0 || colIndex >= columns.size()) {
+                continue;
+            }
+            
+            Cell sumCell = summaryRow.createCell(colIndex);
+            
+            int startRow = skipFirstRows + 1;
+            
+            String colLetter = CellReference.convertNumToColString(colIndex);
+            
+            String formula = String.format(SUM_FORMULA_PATTERN, colLetter, startRow, colLetter, currentRowNumber);
+            sumCell.setCellFormula(formula);
+            
+            ColumnDescriptor column = columns.get(colIndex);
+            CellStyle cellStyle = determinateCellStyle(column.getStyleDescriptor(), styleMoney);
+            
+            if (boldText) {
+                CellStyle boldStyle = wb.createCellStyle();
+                boldStyle.cloneStyleFrom(cellStyle);
+                
+                Font font = wb.createFont();
+                font.setBold(true);
+                boldStyle.setFont(font);
+                
+                sumCell.setCellStyle(boldStyle);
+            } else {
+                sumCell.setCellStyle(cellStyle);
+            }
+        }
+    }
+
+    private @NotNull List<Integer> mapColumnNamesToIndices(List<String> columnNamesToSum) {
+        return columnNamesToSum.stream()
+            .map(this::getColumnIndex)
+            .filter(index -> index >= 0)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Adds a summary row with default settings for specified columns.
+     * This is a simple convenience method that doesn't require a config object.
+     *
+     * @param columnsToSum List of column indices to sum (0-based)
+     * @return Row index where the summary was added
+     */
+    public int addSummaryRow(@NotNull List<Integer> columnsToSum) {
+        return addSummaryRow(columnsToSum, SummaryRowConfig.builder().build());
+    }
+    
+    /**
+     * Adds a summary row with default settings for specified columns by their names.
+     * This is a simple convenience method that doesn't require a config object.
+     *
+     * @param columnNamesToSum List of column names to sum
+     * @return Row index where the summary was added
+     */
+    public int addSummaryRowByColumnNames(@NotNull List<String> columnNamesToSum) {
+        return addSummaryRowByColumnNames(columnNamesToSum, SummaryRowConfig.builder().build());
     }
 
 }
