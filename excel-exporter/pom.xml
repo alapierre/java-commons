@@ -3,7 +3,7 @@
     <parent>
         <artifactId>commons</artifactId>
         <groupId>io.alapierre.commons</groupId>
-        <version>1.18</version>
+        <version>1.19-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
