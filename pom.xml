@@ -26,6 +26,14 @@
             <email>al@alapierre.io</email>
             <name>Adrian Lapierre</name>
         </developer>
+        <developer>
+            <email>adam.silski@itrust.dev</email>
+            <name>Adam Silski</name>
+        </developer>
+        <developer>
+            <email>karol.bryzgiel@itrust.dev</email>
+            <name>Karol Bryzgiel</name>
+        </developer>
     </developers>
 
     <packaging>pom</packaging>
