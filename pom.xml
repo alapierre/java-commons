@@ -65,7 +65,7 @@
         <junit5.version>5.10.1</junit5.version>
         <sonar.organization>alapierre</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-collections4.version>4.5.0</commons-collections4.version>
         <jaxb-runtime.version>4.0.6</jaxb-runtime.version>
     </properties>
 
