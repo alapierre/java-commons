@@ -4,17 +4,7 @@
 
 package pl.com.softproject.utils.excelexporter;
 
-import jodd.bean.BeanUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jetbrains.annotations.NotNull;
-
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,8 +14,30 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import jodd.bean.BeanUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Serializuje obiekty do pliku .xls
@@ -34,9 +46,10 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 @Slf4j
-public class ExcelExporter {
+public class ExcelExporter implements Closeable {
 
     private static final String SUM_FORMULA_PATTERN = "SUM(%s%d:%s%d)";
+    private static final int DEFAULT_WINDOW_SIZE = 100;
     
     protected List<ColumnDescriptor> columns = new LinkedList<>();
     protected List<ColumnDescriptor> additionalColumns = new LinkedList<>();
@@ -59,7 +72,12 @@ public class ExcelExporter {
 
     public ExcelExporter(String sheetName) {
         this.sheetName = sheetName;
-        init();
+        init(DEFAULT_WINDOW_SIZE);
+    }
+
+    public ExcelExporter(String sheetName, int windowSize) {
+        this.sheetName = sheetName;
+        init(windowSize);
     }
 
     /**
@@ -197,8 +215,8 @@ public class ExcelExporter {
         }
     }
 
-    private void init() {
-        createExcelSheet();
+    private void init(int windowSize) {
+        createExcelSheet(windowSize);
         format = wb.createDataFormat();
         initDefaultCellStyles();
         initHeaderStyle();
@@ -276,8 +294,8 @@ public class ExcelExporter {
         return defaultCellStyle;
     }
 
-    protected void createExcelSheet() {
-        wb = new XSSFWorkbook();
+    protected void createExcelSheet(int windowSize) {
+        wb = new SXSSFWorkbook(windowSize);
         sheet = wb.createSheet(sheetName);
     }
 
@@ -431,7 +449,6 @@ public class ExcelExporter {
     }
 
     public void setCellStyleRedBold(int row, int cell) {
-
         CellStyle style = wb.createCellStyle();
         Font font = wb.createFont();
         font.setBold(true);
@@ -593,4 +610,8 @@ public class ExcelExporter {
         return addSummaryRowByColumnNames(columnNamesToSum, SummaryRowConfig.builder().build());
     }
 
+    @Override
+    public void close() throws IOException {
+        wb.close();
+    }
 }
