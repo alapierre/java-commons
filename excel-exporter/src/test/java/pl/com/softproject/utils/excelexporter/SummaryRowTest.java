@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for verifying summary row functionality in ExcelExporter
  */
-public class SummaryRowTest {
+class SummaryRowTest {
 
     @TempDir
     File tempDir;
 
     @Test
-    public void testAddSummaryRowByIndices() throws IOException {
+    void testAddSummaryRowByIndices() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),
@@ -79,7 +79,7 @@ public class SummaryRowTest {
     }
     
     @Test
-    public void testAddSummaryRowByColumnNames() throws IOException {
+    void testAddSummaryRowByColumnNames() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),
@@ -147,7 +147,7 @@ public class SummaryRowTest {
     }
     
     @Test
-    public void testAddSummaryRowWithSkipRows() throws IOException {
+    void testAddSummaryRowWithSkipRows() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),
@@ -209,7 +209,7 @@ public class SummaryRowTest {
     }
     
     @Test
-    public void testCustomLabelColumnPosition() throws IOException {
+    void testCustomLabelColumnPosition() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),
@@ -268,7 +268,7 @@ public class SummaryRowTest {
     }
     
     @Test
-    public void testMinimalBuilderConfig() throws IOException {
+    void testMinimalBuilderConfig() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),
@@ -320,7 +320,7 @@ public class SummaryRowTest {
     }
     
     @Test
-    public void testSimpleMethodWithoutConfig() throws IOException {
+    void testSimpleMethodWithoutConfig() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),
@@ -364,7 +364,7 @@ public class SummaryRowTest {
     }
     
     @Test
-    public void testSimpleMethodByColumnNames() throws IOException {
+    void testSimpleMethodByColumnNames() throws IOException {
         // Create test data
         List<Product> products = Arrays.asList(
                 new Product("Laptop", 1500.0, 2),

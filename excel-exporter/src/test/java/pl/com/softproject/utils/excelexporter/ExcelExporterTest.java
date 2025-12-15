@@ -18,7 +18,7 @@ import java.util.List;
  * @author Adrian Lapierre {@literal al@alapierre.io}
  * Copyrights by original author 2023.11.13
  */
-public class ExcelExporterTest {
+class ExcelExporterTest {
 
     @Test
     void test() throws IOException {
