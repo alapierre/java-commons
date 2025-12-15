@@ -164,7 +164,7 @@
                 <artifactId>logback-classic</artifactId>
                 <groupId>ch.qos.logback</groupId>
                 <optional>true</optional>
-                <version>1.4.14</version>
+                <version>1.5.22</version>
             </dependency>
 
             <dependency>

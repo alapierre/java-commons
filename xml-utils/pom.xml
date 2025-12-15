@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>xml-utils</artifactId>
+    <name>XML Utils</name>
 
     <build>
         <plugins>
@@ -39,11 +40,6 @@
             <groupId>ch.qos.logback</groupId>
             <scope>provided</scope>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jaxb</groupId>-->
-<!--            <artifactId>jaxb-core</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>

@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>io-utils</artifactId>
+    <name>IO Utils</name>
     <dependencies>
 
         <dependency>
@@ -20,6 +21,7 @@
             <groupId>com.github.noconnor</groupId>
             <artifactId>junitperf</artifactId>
             <version>1.37.0</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
