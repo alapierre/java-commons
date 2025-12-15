@@ -21,7 +21,7 @@ import java.util.List;
 public class ExcelExporterTest {
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         val r = Report.builder()
             .name("Jan")
             .lastName("Kowalski")
@@ -42,7 +42,7 @@ public class ExcelExporterTest {
     }
 
     @Test
-    public void shouldFlushOldRowsToDiskWhenOverWindowSize() throws IOException {
+    void shouldFlushOldRowsToDiskWhenOverWindowSize() throws IOException {
         val r = Report.builder()
             .name("Jan")
             .lastName("Kowalski")
