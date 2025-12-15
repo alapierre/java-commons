@@ -31,7 +31,7 @@ class SummaryRowTest {
                 new Product("Monitor", 300.0, 1)
         );
 
-        File outputFile = new File(tempDir, "summary_test.xlsx");;
+        File outputFile = new File(tempDir, "summary_test.xlsx");
         int summaryRowIndex;
 
         try (ExcelExporter exporter = new ExcelExporter("Products")) {
