@@ -52,6 +52,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "summary_test.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
@@ -108,6 +109,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "summary_by_name_test.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
@@ -186,6 +188,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "summary_with_skip_test.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
@@ -239,6 +242,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "summary_custom_label.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
@@ -290,6 +294,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "minimal_config.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
@@ -338,6 +343,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "simple_method.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
@@ -381,6 +387,7 @@ public class SummaryRowTest {
         // Save to temp file
         File outputFile = new File(tempDir, "simple_by_names.xlsx");
         exporter.save(outputFile);
+        exporter.close();
         
         // Verify summary row
         Workbook workbook = WorkbookFactory.create(outputFile);
