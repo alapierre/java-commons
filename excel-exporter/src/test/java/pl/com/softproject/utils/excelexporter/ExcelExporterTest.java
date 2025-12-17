@@ -1,18 +1,19 @@
 package pl.com.softproject.utils.excelexporter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author Adrian Lapierre {@literal al@alapierre.io}
@@ -22,13 +23,8 @@ class ExcelExporterTest {
 
     @Test
     void test() throws IOException {
-        val r = Report.builder()
-            .name("Jan")
-            .lastName("Kowalski")
-            .address(List.of("Warszawska", "Marszałkowska"))
-            .build();
-
-        List<Report> rows = generateListOfRows(r, 1);
+        val r = givenValidReportRow();
+        List<ReportRow> rows = generateListOfRows(r, 1);
 
         try (ExcelExporter excelExporter = new ExcelExporter("report")) {
             excelExporter.addColumn(new ColumnDescriptor("Name", "name"));
@@ -43,16 +39,12 @@ class ExcelExporterTest {
 
     @Test
     void shouldFlushOldRowsToDiskWhenOverWindowSize() throws IOException {
-        val r = Report.builder()
-            .name("Jan")
-            .lastName("Kowalski")
-            .address(List.of("Warszawska", "Marszałkowska"))
-            .build();
+        val r = givenValidReportRow();
         int rowsCount = 15;
         int windowSize = 10;
         String sheetName = "report";
 
-        List<Report> rows = generateListOfRows(r, rowsCount);
+        List<ReportRow> rows = generateListOfRows(r, rowsCount);
 
         try (ExcelExporter excelExporter = new ExcelExporter(sheetName, windowSize)) {
             excelExporter.addColumn(new ColumnDescriptor("Name", "name"));
@@ -72,8 +64,52 @@ class ExcelExporterTest {
         }
     }
 
-    private static @NotNull List<Report> generateListOfRows(Report r, int size) {
-        List<Report> result = new ArrayList<>(size);
+    @Test
+    void shouldAutoSizeColumnsWhenAutoSizingPrepared() throws IOException {
+        val r = givenValidReportRow();
+        List<ReportRow> rows = generateListOfRows(r, 1);
+
+        try (ExcelExporter excelExporter = new ExcelExporter("report")) {
+            excelExporter.prepareAutoSizing();
+            excelExporter.addColumn(new ColumnDescriptor("Name", "name"));
+            excelExporter.addColumn(new ColumnDescriptor("Last Name", "lastName"));
+            excelExporter.addColumn(new ColumnDescriptor("Address", "address[1]"));
+
+            rows.forEach(excelExporter::createRow);
+            excelExporter.autoSizeAllColumns();
+            excelExporter.save(new File("/tmp/sample_excel.xlsx"));
+        }
+    }
+
+    @Test
+    void shouldThrowWhenAutoSizingColumnsWithoutPrepareCall() throws IOException {
+        val r = givenValidReportRow();
+        List<ReportRow> rows = generateListOfRows(r, 1);
+
+        try (ExcelExporter excelExporter = new ExcelExporter("report")) {
+            excelExporter.addColumn(new ColumnDescriptor("Name", "name"));
+            excelExporter.addColumn(new ColumnDescriptor("Last Name", "lastName"));
+            excelExporter.addColumn(new ColumnDescriptor("Address", "address[1]"));
+
+            rows.forEach(excelExporter::createRow);
+            IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                excelExporter::autoSizeAllColumns
+            );
+            assertEquals("autoSizeAllColumns() requires prepareAutoSizing() to be called first", ex.getMessage());
+        }
+    }
+
+    private static ReportRow givenValidReportRow() {
+        return ReportRow.builder()
+            .name("Jan")
+            .lastName("Kowalski")
+            .address(List.of("Warszawska", "Marszałkowska"))
+            .build();
+    }
+
+    private static @NotNull List<ReportRow> generateListOfRows(ReportRow r, int size) {
+        List<ReportRow> result = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             result.add(
                 r.toBuilder()
@@ -86,7 +122,7 @@ class ExcelExporterTest {
 
     @Data
     @Builder(toBuilder = true)
-    public static class Report {
+    public static class ReportRow {
 
         private String name;
         private String lastName;
