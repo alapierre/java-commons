@@ -30,10 +30,10 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -55,11 +55,12 @@ public class ExcelExporter implements Closeable {
     protected List<ColumnDescriptor> additionalColumns = new LinkedList<>();
     protected OutputStream out;
     protected String sheetName;
-    protected Sheet sheet;
-    protected Workbook wb;
+    protected SXSSFSheet sheet;
+    protected SXSSFWorkbook wb;
     protected Row header;
     protected int currentRowNumber;
     protected int currentColumnNumber;
+    private boolean autoSizingPrepared = false;
 
     protected DataFormat format;
     protected CellStyle styleMoney;
@@ -205,9 +206,26 @@ public class ExcelExporter implements Closeable {
     }
 
     /**
-     * Ustawia dla wszystkich wypełnionych kolumn szerokość na auto-size
+     * Przygotowuje arkusz do późniejszego wyliczenia szerokości kolumn (auto-size).
+     *
+     * Musi być wywołane przed zapisem jakichkolwiek wierszy.
+     */
+    public void prepareAutoSizing() {
+        sheet.trackAllColumnsForAutoSizing();
+        autoSizingPrepared = true;
+    }
+
+    /**
+     * Ustawia dla wszystkich wypełnionych kolumn szerokość na auto-size.
+     *
+     * Wymaga wcześniejszego wywołania {@link #prepareAutoSizing()}.
      */
     public void autoSizeAllColumns() {
+        if (!autoSizingPrepared) {
+            throw new IllegalStateException(
+                "autoSizeAllColumns() requires prepareAutoSizing() to be called first"
+            );
+        }
         if(header!=null) {
             for (Cell col : header) {
                 sheet.autoSizeColumn(col.getColumnIndex(), true);
