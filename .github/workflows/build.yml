@@ -9,9 +9,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-      MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+#    env:
+#      MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+#      MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -42,4 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=alapierre_java-commons
       - name: test env
-        run: grep "<id>central</id>" /home/runner/.m2/settings.xml
+        run: cat /home/runner/.m2/settings.xml
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
