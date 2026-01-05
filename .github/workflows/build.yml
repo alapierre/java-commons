@@ -42,4 +42,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=alapierre_java-commons
       - name: test env
-        run: grep "<id>central</id>" ~/.m2/settings.xml
+        run: grep "<id>central</id>" /home/runner/.m2/settings.xml
