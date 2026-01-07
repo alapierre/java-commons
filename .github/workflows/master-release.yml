@@ -4,9 +4,6 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write
-
 jobs:
   build:
     name: Build (master)
