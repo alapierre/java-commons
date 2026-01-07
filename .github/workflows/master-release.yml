@@ -1,19 +1,22 @@
-name: Release
+name: Master Build & Release
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
+
 permissions:
   contents: write
+
 jobs:
+  build:
+    name: Build (master)
+    uses: ./.github/workflows/_build.yml
   release:
     name: Release
+    needs: build
     runs-on: ubuntu-latest
+    environment: osrh
     steps:
-      - name: Fail if not on master
-        run: |
-          if [ "${GITHUB_REF_NAME}" != "master" ]; then
-            echo "Release can only be run on master. Current ref: ${GITHUB_REF_NAME}"
-            exit 1
-          fi
       - name: Checkout (full history + tags)
         uses: actions/checkout@v5
         with:
@@ -37,11 +40,11 @@ jobs:
       - name: Release prepare
         run: |
           set -euo pipefail
-          mvn -B -DskipTests release:prepare
+          mvn -B -DskipTests -Darguments="-DskipTests" release:prepare
       - name: Release perform
         run: |
           set -euo pipefail
-          mvn -B -DskipTests release:perform
+          mvn -B -DskipTests -Darguments="-DskipTests" release:perform
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
