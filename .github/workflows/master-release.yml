@@ -1,0 +1,56 @@
+name: Master Build & Release
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build (master)
+    uses: ./.github/workflows/_build.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+    environment: osrh
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout (full history + tags)
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Configure Git user for release commits
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: maven
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY_B64 }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Release prepare
+        run: |
+          set -euo pipefail
+          mvn -B -DskipTests -Darguments="-DskipTests" release:prepare
+      - name: Release perform
+        run: |
+          set -euo pipefail
+          mvn -B -DskipTests -Darguments="-DskipTests" release:perform
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSWORD }}
+      - name: Push release commits and tags
+        run: |
+          set -euo pipefail
+          git push --follow-tags origin HEAD:${GITHUB_REF_NAME}
