@@ -10,3 +10,6 @@ jobs:
   build:
     name: Build (PR)
     uses: ./.github/workflows/_build.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

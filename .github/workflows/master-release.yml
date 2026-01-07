@@ -11,6 +11,9 @@ jobs:
   build:
     name: Build (master)
     uses: ./.github/workflows/_build.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release:
     name: Release
     needs: build
