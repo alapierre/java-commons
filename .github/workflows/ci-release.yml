@@ -7,6 +7,7 @@ on:
 jobs:
   verify:
     uses: ./.github/workflows/_verify.yml
+    name: Verify (tests + sonar)
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   release:
