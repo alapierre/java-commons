@@ -1,18 +1,17 @@
-name: Master Build & Release
+name: Release (verify + publish)
 on:
   push:
     branches:
       - master
 
 jobs:
-  build:
-    name: Build (master)
-    uses: ./.github/workflows/_build.yml
+  verify:
+    uses: ./.github/workflows/reusable/_verify.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   release:
     name: Release
-    needs: build
+    needs: verify
     runs-on: ubuntu-latest
     environment: osrh
     permissions:

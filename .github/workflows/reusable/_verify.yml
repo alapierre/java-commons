@@ -1,12 +1,13 @@
-name: _build
+name: _verify (reusable)
 on:
   workflow_call:
     secrets:
       SONAR_TOKEN:
         required: true
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
+    name: Verify (tests + sonar)
     steps:
       - uses: actions/checkout@v5
         with:

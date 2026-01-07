@@ -1,11 +1,10 @@
-name: PR Build
+name: CI Verify
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
-    name: Build (PR)
-    uses: ./.github/workflows/_build.yml
+  verify:
+    uses: ./.github/workflows/reusable/_verify.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
