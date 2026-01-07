@@ -49,7 +49,7 @@
 
     <groupId>io.alapierre.commons</groupId>
     <artifactId>commons</artifactId>
-    <version>1.21-SNAPSHOT</version>
+    <version>1.22-SNAPSHOT</version>
     <name>Commons Java Utils</name>
 
     <properties>
