@@ -1,20 +1,26 @@
 package pl.com.softproject.utils.xml.stax;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
-import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Adrian Lapierre {@literal al@alapierre.io}
@@ -46,45 +52,37 @@ public class ElementFinder {
 
     @NotNull
     public Set<XmlElement> find(@NonNull Reader xml, @NonNull Set<String> pathsToFind) throws XMLStreamException {
-
         path.clear();
 
         XMLEventReader eventReader = null;
-        val res = new HashSet<XmlElement>();
+        val res = new LinkedHashSet<XmlElement>();
 
         try {
             eventReader = factory.createXMLEventReader(xml);
 
             while (eventReader.hasNext()) {
-
                 val xmlEvent = eventReader.nextEvent();
 
                 if (xmlEvent.isStartElement()) {
                     val startElement = xmlEvent.asStartElement();
                     path.addLast(startElement.getName().getLocalPart());
+
                     val pathAsString = String.join("/", path);
                     if (pathsToFind.contains(pathAsString)) {
                         res.add(createXmlElement(xmlEvent, pathAsString, eventReader));
                     }
-                } else if(xmlEvent.isEndElement()) {
+                } else if (xmlEvent.isEndElement()) {
                     path.removeLast();
                 }
             }
 
         } finally {
-            if (eventReader != null) {
-                try {
-                    eventReader.close();
-                } catch (XMLStreamException ignore) {
-                    // ignore exception on close
-                }
-            }
+            closeQuietly(eventReader);
         }
         return res;
     }
 
     public Optional<XmlElement> find(@NonNull Reader xml, @NonNull String pathToFind) throws XMLStreamException {
-
         path.clear();
 
         XMLEventReader eventReader = null;
@@ -93,31 +91,25 @@ public class ElementFinder {
             eventReader = factory.createXMLEventReader(xml);
 
             while (eventReader.hasNext()) {
-
                 val xmlEvent = eventReader.nextEvent();
 
                 if (xmlEvent.isStartElement()) {
                     val startElement = xmlEvent.asStartElement();
                     path.addLast(startElement.getName().getLocalPart());
+
                     val pathAsString = String.join("/", path);
                     if (pathAsString.equals(pathToFind)) {
                         return Optional.of(createXmlElement(xmlEvent, pathAsString, eventReader));
                     }
-                } else if(xmlEvent.isEndElement()) {
+                } else if (xmlEvent.isEndElement()) {
                     path.removeLast();
                 }
             }
 
         } finally {
-            if (eventReader != null) {
-                try {
-                    eventReader.close();
-                } catch (XMLStreamException ignore) {
-                    // ignore exception on close
-                }
-            }
+            closeQuietly(eventReader);
         }
-    return Optional.empty();
+        return Optional.empty();
     }
 
     protected XmlElement createXmlElement(@NonNull XMLEvent event, @NonNull String path, @NonNull XMLEventReader eventReader) throws XMLStreamException {
@@ -129,7 +121,7 @@ public class ElementFinder {
         Iterable<Attribute> iterable = startElement::getAttributes;
 
         val attributes = StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.toSet());
+            .collect(Collectors.toSet());
 
         String value = null;
 
@@ -143,4 +135,13 @@ public class ElementFinder {
         return new XmlElement(path, name, value, attributes);
     }
 
+    private void closeQuietly(XMLEventReader eventReader) {
+        if (eventReader != null) {
+            try {
+                eventReader.close();
+            } catch (XMLStreamException ignore) {
+                // ignore
+            }
+        }
+    }
 }
